@@ -1,0 +1,172 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage[all]{xy}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+
+% these packages make it easy to include figures in the text. 
+\usepackage{float}
+\restylefloat{figure}
+
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cF}{\mathcal{F}}
+
+
+
+
+\begin{document}
+{\Large Name:}  \\
+\begin{center}
+\Large AMATH 515 \hskip 2in Homework Set 1\\
+{\bf Due:  Wednesday Jan 22rd, by midnight}. 
+\end{center}
+\bigskip
+\begin{enumerate}
+
+%\item Read section 1.5 of the course notes (LivingText) and show the following: 
+%\begin{enumerate}
+%\item First part of Corollary 1.14. Given any $\beta$-smooth function $f: U \rightarrow \mathbb{R}$, for any points $x,y \in U$, the inequality 
+%\[
+%\left| f(y) - f(x) - \nabla f(x)^T(y-x)\right| \leq \frac{\beta}{2}\|y-x\|^2
+%\]
+%holds. 
+%
+%\item In class we saw that the operator norm on $\nabla^2 f(x)$ gives a $\beta$. Show the opposite direction, i.e. that if $f$ is $\beta$-smooth 
+%and twice-continuously differentiable, then $\|\nabla^2 f\| \leq \beta$.
+%
+%\end{enumerate}
+%
+%\bigskip\bigskip
+
+\item Show that if $g:\mathbb{R}^n \rightarrow \mathbb{R}$ is a twice differentiable function,  $A \in \mathbb{R}^{m\times n}$ any matrix, 
+and $h$ is the composition $g(Ax)$, then  
+\begin{enumerate}
+\item $\nabla h(x) = A^T \nabla g(Ax)$. 
+\item $\nabla^2 h(x) = A^T \nabla^2 g(Ax) A$
+\item Use the formulas to compute the gradient and hessian of the logistic regression objective: 
+\[
+\sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle))- b^TAx
+\]
+\end{enumerate}
+
+The point here is just to show why these formulas hold. One way to proceed is to be fully explicit in all coordinates but this is time consuming and not very insightful. A better way to go is to think about efficient ways to write the 
+product $Ax$ that makes it easy to differentiate with respect to each coordinate. 
+
+
+\bigskip\bigskip
+
+
+\item Explain why each of the following functions is convex. 
+
+\begin{enumerate}
+\item Indicator function to a convex set: 
+\(
+\delta_C(x) = \begin{cases} 0 & \mbox{if} \quad x \in C \\ \infty & \mbox{if} \quad x \not \in C. \end{cases}
+\)
+
+\item Support function to any set: 
+\(
+\sigma_C(x) = \sup_{c \in C} c^Tx.
+\)
+
+\item Any norm (see Chapter 1 for definition of a norm). 
+%\item Perspective function: 
+%\(
+%f(x,t) = tg(x/t), 
+%\)
+%where $g$ is a convex function, $x\in \mathbb{R}^n$, and $t>0$ is a positive scalar. 
+
+\end{enumerate}
+
+\bigskip\bigskip
+
+
+
+
+\item  Convexity and composition rules. Suppose that $f$ and $g$ are $\cC^2$ functions from $\mathbb{R}$ to $\mathbb{R}$, with $h = f\circ g$ their composition, defined by 
+\(
+h(x) = f(g(x)).
+\) 
+\begin{enumerate}
+\item If $f$ and $g$ are convex, show it is possible for $h$ to be nonconvex (give an example). What additional condition ensures 
+the convexity of the composition? 
+\item If $f$ is convex and $g$ is concave, what additional hypothesis that guarantees $h$ is convex? 
+\item Show that if $f: \mathbb{R}^m \rightarrow \mathbb{R}$ is convex and $g: \mathbb{R}^n \rightarrow \mathbb{R}^m$ affine, then $h$ is convex. 
+\item Show that the following functions are convex: 
+\begin{enumerate}
+\item Logistic regression objective: $\sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle))- b^TAx$
+\item Poisson regression objective: $\sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx$. 
+\end{enumerate}
+\end{enumerate}
+
+
+
+\bigskip\bigskip
+
+
+\item A function $f$ is {\it strictly convex} if 
+\[
+f(\lambda x + (1-\lambda)y) < \lambda f(x) + (1-\lambda) f(y), \quad \lambda \in (0,1).
+\]
+\begin{enumerate}
+\item Give an example of a strictly convex function that 
+does not have a minimizer. 
+\item Show that a sum of a strictly convex function and a convex function is strictly convex. 
+\item What conditions (if any) are necessary to ensure that the following problems have a unique minimizer?  
+\begin{enumerate}
+\item Least squares: $\min_x \frac{1}{2}\|Ax - b\|^2$
+%\item Logistic: $\min_x \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle))- b^TAx$
+\item Elastic net logistic: 
+\[
+\min_x \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle)) + \lambda(\alpha \|x\|_1 + (1-\alpha)\|x\|^2), \quad \lambda>0, \alpha \in (0,1)
+\]
+\end{enumerate}
+\end{enumerate}
+\bigskip\bigskip
+
+
+
+\item Lipschitz constants.  
+\begin{enumerate}
+\item Find a global bound for $\beta$ of the least-squares objective $\frac{1}{2}\|Ax-b\|^2$.
+\item Find a global bound for $\beta$ of the regularized logistic objective 
+\[
+\sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle)) + \frac{\lambda}{2}\|x\|^2. 
+\]
+\item Do the gradients for Poisson regression admit a global Lipschitz constant? 
+\end{enumerate}
+
+
+
+\bigskip\bigskip
+
+\item Behavior of steepest descent for logistic vs. poisson regression. 
+\begin{enumerate}
+\item Given the sample (logistic) data set and starter code, implement gradient descent for $\ell_2$-regularized logistic regression. 
+Plot (a) the objective value and (b) the norm of the gradient 
+(as a measure of optimality) on two separate figures. For the figure in (b), make sure the y-axis is on a logarithmic scale. 
+\item Implement Newton's method for the same problem. Does the method converge? If necessary, use the line search routine provided
+to scale your updated directly to ensure descent. Add the plots for Newton's method (a) and (b) to your Figures 1 and 2. What do you notice? 
+\item Using the sample (Poisson) data  and starter code provided, implement gradient descent and Newton's method for $\ell_2$-regularized Poisson regression. You may need to use the line search routine for 
+both algorithms. Make the same plots as you did for the logistic regression examples. 
+\item What do you notice qualitatively about steepest descent vs. Newton?
+
+ 
+\end{enumerate}
+
+\bigskip\bigskip
+
+
+
+
+\end{enumerate}
+
+
+\end{document}  
