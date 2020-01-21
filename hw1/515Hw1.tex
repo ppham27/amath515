@@ -22,10 +22,10 @@
 
 
 \begin{document}
-{\Large Name:}  \\
+{\Large Name: Philip Pham}  \\
 \begin{center}
 \Large AMATH 515 \hskip 2in Homework Set 1\\
-{\bf Due:  Wednesday Jan 22rd, by midnight}. 
+{\bf Due:  Monday Jan 27th, by midnight}. 
 \end{center}
 \bigskip
 \begin{enumerate}
@@ -45,15 +45,73 @@
 %
 %\bigskip\bigskip
 
-\item Show that if $g:\mathbb{R}^n \rightarrow \mathbb{R}$ is a twice differentiable function,  $A \in \mathbb{R}^{m\times n}$ any matrix, 
+\item Show that if $g:\mathbb{R}^m \rightarrow \mathbb{R}$ is a twice differentiable function,  $A \in \mathbb{R}^{m\times n}$ any matrix, 
 and $h$ is the composition $g(Ax)$, then  
 \begin{enumerate}
-\item $\nabla h(x) = A^T \nabla g(Ax)$. 
+\item $\nabla h(x) = A^T \nabla g(Ax)$.
+
+  Use $D$ for the total derivative rather than abuse the $\nabla$ notation. If
+  $f: \mathbb{R}^n \rightarrow \mathbb{R}^m$, then the linear map
+  $D_a f: \mathbb{R}^n \rightarrow \mathbb{R}^m$ is the total derivative of $f$
+  evaluated at $a$. With this definition, for functions,
+  $f: \mathbb{R}^n \rightarrow \mathbb{R}$, we have that
+  $\left(D_x f\right)^T = \nabla f (x)$.
+  
+  \begin{proof}
+    
+    Clearly, \begin{equation*}
+      \lim_{h \rightarrow 0} \frac{A(x + h) - Ax - Ah}{h} = 0, \forall x \in \mathbb{R}^n
+    \end{equation*}
+    since $A$ is a linear map. Thus, by definition $D_x A = A$.
+
+    The chain rule tells us that if $F(x) = G(H(x))$, then
+    $D_x F = D_{H(x)} G \circ D_x H$. In this case, the composition operator is
+    just matrix multiplication. We have that
+    \begin{equation*}
+      D_x h = D_{Ax} g \circ D_x A = D_{Ax} g \circ A,
+    \end{equation*}
+    which implies that
+    \begin{align*}
+      0
+      &= \lim_{h \rightarrow 0} \frac{g(A(x + h)) - g(Ax) - \left(D_{Ax} g \circ A\right)h}{h} \\
+      &= \lim_{h \rightarrow 0} \frac{g(A(x + h)) - g(Ax) - \langle A^T\left(D_{Ax} g\right)^T, h \rangle}{h} \\
+      &= \lim_{h \rightarrow 0} \frac{g(A(x + h)) - g(Ax) - \langle A^T\nabla g(Ax), h \rangle}{h}.
+    \end{align*}
+    Thus, by definition, $\nabla h(x) = A^T \nabla g(Ax).$
+  \end{proof}
 \item $\nabla^2 h(x) = A^T \nabla^2 g(Ax) A$
+  \begin{proof}
+    Define $F(x) = A^T\nabla g(Ax)$, so
+    $F: \mathbb{R}^n \rightarrow \mathbb{R}^n.$ We can apply the chain rule again:
+    \begin{equation*}
+      D_x F = A^T D_x  \nabla g(Ax) = A^T \nabla^2 g(Ax) D_xA = A^T \nabla^2 g(Ax) A.
+    \end{equation*}
+    Since $D_x F = \nabla^2 h(x)$, we have our desired result.    
+  \end{proof}
 \item Use the formulas to compute the gradient and hessian of the logistic regression objective: 
 \[
 \sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle))- b^TAx
 \]
+where $a_i$ denote the rows of $A$.
+
+\begin{proof}
+  We can write the terms in the summation as $g(a_i^Tx)$, where
+  $g(x) = \log(1 + \exp(x))$. We have that
+  \begin{align*}
+    \nabla g(x) &= \frac{\exp(x)}{1 + \exp(x)} \\
+    \nabla^2 g(x) &= \frac{\exp(x)}{\left(1 + \exp(x)\right)^2}.
+  \end{align*}
+
+  Let
+  \begin{equation*}
+    l(x) = \sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle))- b^TAx.
+  \end{equation*}
+  Applying the previous results to each term, we obtain
+  \begin{align*}
+    \nabla l(x) &= \sum_{i=1}^n a_i\frac{\exp(\langle a_i , x \rangle)}{1 + \exp(\langle a_i , x \rangle)} - A^Tb \\
+    \nabla^2 l(x) &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i , x \rangle)}{\left(\exp(1 + \langle a_i , x \rangle)\right)^2}.
+  \end{align*}
+\end{proof}
 \end{enumerate}
 
 The point here is just to show why these formulas hold. One way to proceed is to be fully explicit in all coordinates but this is time consuming and not very insightful. A better way to go is to think about efficient ways to write the 
@@ -117,7 +175,7 @@ f(\lambda x + (1-\lambda)y) < \lambda f(x) + (1-\lambda) f(y), \quad \lambda \in
 \]
 \begin{enumerate}
 \item Give an example of a strictly convex function that 
-does not have a minimizer. 
+does not have a minimizer. Explain why your function is strictly convex. 
 \item Show that a sum of a strictly convex function and a convex function is strictly convex. 
 \item What conditions (if any) are necessary to ensure that the following problems have a unique minimizer?  
 \begin{enumerate}
@@ -133,13 +191,50 @@ does not have a minimizer.
 
 
 
-\item Lipschitz constants.  
+\item Lipschitz constants and $\beta$-smoothness. Remember that $f$ is $\beta$ smooth when 
+its gradient is $\beta$-Lipschitz continuous.   
 \begin{enumerate}
 \item Find a global bound for $\beta$ of the least-squares objective $\frac{1}{2}\|Ax-b\|^2$.
+  \begin{proof}
+    If $l(x) = \frac{1}{2}\|Ax-b\|^2$, then $\nabla l(x) = A^T\left(Ax - b\right)$.
+    
+    We have that $\nabla l(y) - \nabla l(x) = A^TAy - A^TAx = A^TA(y -
+    x)$. Since $A^TA$ is positive semidefinite (it's the the Gramian matrix), we
+    can write $x - y = c_1v_1 + \cdots + c_nv_n$, where the $v_i$ are
+    orthonormal eigenvectors. Moveover,
+    $\lVert x - y \rVert = \sqrt{c_1^2 + \cdots + c_n^2}$. Let $v_i$ have the
+    corresponding eigenvalues $\lambda_i$ and
+    $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n \geq 0$.
+    
+    \begin{align*}
+      \lVert \nabla l(y) - \nabla l(x) \rVert
+      &= \lVert A^TA(y - x) \rVert \\
+      &= \sqrt{\lambda_1^2c_1^2 + \cdots + \lambda_n^2c_n^2} \\
+      &\leq \lambda_1 \sqrt{c_1^2 + \cdots + c_n^2} = \lambda_1\lVert y - x \rVert.
+    \end{align*}
+
+    Thus, we have that
+    $\beta = \lambda_1 = \lambda_{\operatorname{max}} \left(A^TA\right)$, that
+    is, the maximum eigenvalue of $A^TA$.
+  \end{proof}
 \item Find a global bound for $\beta$ of the regularized logistic objective 
 \[
 \sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle)) + \frac{\lambda}{2}\|x\|^2. 
 \]
+\begin{proof}
+  If
+  $l(x) = \sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle)) +
+  \frac{\lambda}{2}\|x\|^2$, then
+  \begin{align*}
+    \nabla l(x)
+    &= \sum_{i=1}^n a_i\frac{\exp(\langle a_i, x\rangle)}{1+\exp(\langle a_i, x\rangle)} + \lambda x \\
+    \nabla^2 l(x)
+    &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i, x\rangle)}{\left(1+\exp(\langle a_i, x\rangle)\right)^2} + \lambda I_n
+      \leq \frac{1}{4} \sum_{i=1}^n a_ia_i^T + \lambda I_n = \frac{1}{4}A^TA + \lambda I_n.
+  \end{align*}
+  from the derivation in Problem 1. Thus,
+  $\beta = \lambda_{\operatorname{max}}\left(\frac{1}{4}A^TA + \lambda I_n\right).$
+\end{proof}
 \item Do the gradients for Poisson regression admit a global Lipschitz constant? 
 \end{enumerate}
 
