@@ -315,16 +315,54 @@ f(\lambda x + (1-\lambda)y) < \lambda f(x) + (1-\lambda) f(y), \quad \lambda \in
 \]
 \begin{enumerate}
 \item Give an example of a strictly convex function that 
-does not have a minimizer. Explain why your function is strictly convex. 
-\item Show that a sum of a strictly convex function and a convex function is strictly convex. 
+  does not have a minimizer. Explain why your function is strictly convex.
+  \begin{proof}
+    Consider $f(x) = \exp(x)$. $f^{\prime\prime} = \exp(x) \gneq 0$, so $f$ is
+    strictly convex. Because $f^\prime(x) = \exp(x) \neq 0$, for no
+    $x \in \mathbb{R}$ does $f$ satisfy the necessary condition
+    $f^\prime(x) = 0$ to be a minimizer.
+  \end{proof}
+\item Show that a sum of a strictly convex function and a convex function is strictly convex.
+  \begin{proof}
+    Let $f(x) = f_1(x) + \cdots + f_n(x)$ where $f_i$ are all strictly convex.
+    
+    Then,
+    \begin{align*}
+      f(\lambda x + (1-\lambda)y)
+      &= f_1(\lambda x + (1-\lambda)y) + \cdots + f_n(\lambda x + (1-\lambda)y) \\
+      &\lneq \left[\lambda f_1(x) + (1-\lambda)f_1(y)\right] + \cdots + \left[\lambda f_n(x) + (1-\lambda)f_n(y)\right] \\
+      &= \lambda\left(f_1(x) + \cdots + f_n(x)\right) + \left(1 - \lambda\right)\left(f_1(y) + \cdots + f_n(y)\right),
+    \end{align*}
+    so $f$ is strictly convex by definition.
+  \end{proof}
 \item What conditions (if any) are necessary to ensure that the following problems have a unique minimizer?  
 \begin{enumerate}
 \item Least squares: $\min_x \frac{1}{2}\|Ax - b\|^2$
-%\item Logistic: $\min_x \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle))- b^TAx$
+  \begin{proof}    
+    \begin{align*}
+      \nabla \frac{1}{2}\|Ax - b\|^2
+      &= A^T\left(Ax - b\right) \\
+      \nabla^2 \frac{1}{2}\|Ax - b\|^2
+      &= A^TA
+    \end{align*}
+    by applying the identities in Problem 1.
+    $\nabla^2 \frac{1}{2}\|Ax - b\|^2 = A^TA \succeq 0$ since $A^TA$ is a
+    Gramian matrix. Appealing to Theorem 2.8 of the book, we'll have that $x$ is
+    a local minimizer of if $A^T\left(Ax - b\right) = 0$, so we must have a
+    solution to the linear system $A^TAx = A^Tb$ for $x$ to be local
+    minimizer. If $x$ is local minimizer, it is a global minimizer by Corollary
+    2.19. For $x$ to be a unique minimizer, $A^TAx = A^Tb$ must have a unique
+    solution. This will occur if and only if the null space of $A^TA$ is the
+    empty set, that is, $A^TA$ is positive definite.
+  \end{proof}
+  % \item Logistic: $\min_x \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle))- b^TAx$
 \item Elastic net logistic: 
 \[
 \min_x \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle)) + \lambda(\alpha \|x\|_1 + (1-\alpha)\|x\|^2), \quad \lambda>0, \alpha \in (0,1)
 \]
+
+\begin{proof}
+\end{proof}
 \end{enumerate}
 \end{enumerate}
 \bigskip\bigskip
