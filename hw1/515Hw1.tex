@@ -129,12 +129,49 @@ product $Ax$ that makes it easy to differentiate with respect to each coordinate
 \delta_C(x) = \begin{cases} 0 & \mbox{if} \quad x \in C \\ \infty & \mbox{if} \quad x \not \in C. \end{cases}
 \)
 
+\begin{proof}
+  This follows from the defintion that
+  $$f(\lambda x + (1-\lambda)y) \leq \lambda f(x) + (1 - \lambda)f(y)$$ for all
+  $x$ and $y$ and $\lambda \in [0, 1]$. We have four cases: (1) if $x \in C$ and
+  $y \in C$, then both the left-hand side and right-hand side are always $0$ and
+  the inquality holds; (2) if $x \in C$ and $y \not\in C$, then the right-hand
+  side is $\infty$ unless $\lambda = 1$, in which case, both the right-hand and
+  left-hand side are $0$; (3) if $x \not\in C$ and $y \in C$, this is the same
+  as the previous case except that both the left-hand side and right-hand side
+  are $0$ when $\lambda = 0$; and (4) if $x \not\in C$ and $y \not\in C$, the
+  right-hand side is always $\infty$.
+\end{proof}
+
 \item Support function to any set: 
 \(
 \sigma_C(x) = \sup_{c \in C} c^Tx.
 \)
 
-\item Any norm (see Chapter 1 for definition of a norm). 
+\begin{proof}
+  \begin{align*}
+    \sigma_C(\lambda x + (1-\lambda)y)
+    &= \sup_{c \in C} c^T\left(x + (1-\lambda)y\right) \\
+    &= \sup_{c \in C} \left(\lambda c^T x + (1-\lambda)c^Ty\right) \\
+    &\leq \sup_{c \in C} \lambda c^T x + \sup_{c \in C}  (1-\lambda)c^Ty \\
+    &= \lambda \sup_{c \in C}  c^T x + (1-\lambda)\sup_{c \in C} c^Ty \\
+    &= \lambda \sigma_C(x) + (1-\lambda)\sigma_C(y),
+  \end{align*}
+  so by definition $\sigma_C$ is convex.
+\end{proof}
+
+\item Any norm (see Chapter 1 for definition of a norm).
+
+  \begin{proof}
+    Let $\lVert \cdot \rVert$ be a norm, meaning that it satisfies
+    \emph{absolute homogeneity} and the \emph{triangle inequality}. We have that
+    \begin{align*}
+      \lVert \lambda x + (1 - \lambda)y \rVert
+      &\leq \lVert \lambda x \rVert + \lVert (1 - \lambda)y \rVert
+      = \lambda \lVert x \rVert + (1 - \lambda)\lVert y \rVert
+    \end{align*}
+    for all $\lambda \in [0, 1]$, where we first apply the triangle inequality
+    and then absolute homogeneity. By defintion, $\lVert \cdot \rVert$ is convex.
+  \end{proof}
 %\item Perspective function: 
 %\(
 %f(x,t) = tg(x/t), 
