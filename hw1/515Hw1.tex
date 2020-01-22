@@ -2,7 +2,7 @@
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
 \geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
 %\geometry{landscape}                % Activate for for rotated page geometry
-%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage[all]{xy}
@@ -201,8 +201,8 @@ its gradient is $\beta$-Lipschitz continuous.
     We have that $\nabla l(y) - \nabla l(x) = A^TAy - A^TAx = A^TA(y -
     x)$. Since $A^TA$ is positive semidefinite (it's the the Gramian matrix), we
     can write $x - y = c_1v_1 + \cdots + c_nv_n$, where the $v_i$ are
-    orthonormal eigenvectors. Moveover,
-    $\lVert x - y \rVert = \sqrt{c_1^2 + \cdots + c_n^2}$. Let $v_i$ have the
+    orthonormal eigenvectors. Moreover,
+    $$\lVert x - y \rVert = \sqrt{c_1^2 + \cdots + c_n^2}.$$ Let $v_i$ have the
     corresponding eigenvalues $\lambda_i$ and
     $\lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_n \geq 0$.
     
@@ -229,13 +229,26 @@ its gradient is $\beta$-Lipschitz continuous.
     \nabla l(x)
     &= \sum_{i=1}^n a_i\frac{\exp(\langle a_i, x\rangle)}{1+\exp(\langle a_i, x\rangle)} + \lambda x \\
     \nabla^2 l(x)
-    &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i, x\rangle)}{\left(1+\exp(\langle a_i, x\rangle)\right)^2} + \lambda I_n
-      \leq \frac{1}{4} \sum_{i=1}^n a_ia_i^T + \lambda I_n = \frac{1}{4}A^TA + \lambda I_n.
+    &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i, x\rangle)}{\left(1+\exp(\langle a_i, x\rangle)\right)^2} + \lambda I
+      \leq \frac{1}{4} \sum_{i=1}^n a_ia_i^T + \lambda I = \frac{1}{4}A^TA + \lambda I.
   \end{align*}
   from the derivation in Problem 1. Thus,
-  $\beta = \lambda_{\operatorname{max}}\left(\frac{1}{4}A^TA + \lambda I_n\right).$
+  $\beta = \lambda_{\operatorname{max}}\left(\frac{1}{4}A^TA + \lambda I\right).$
 \end{proof}
-\item Do the gradients for Poisson regression admit a global Lipschitz constant? 
+\item Do the gradients for Poisson regression admit a global Lipschitz constant?
+
+  \begin{proof}
+    They do not. The poisson objective is
+    $l(x) = \sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx$, the gradient and
+    hessian is
+    \begin{align*}
+      \nabla l(x) &= \sum_{i=1}^n a_i \exp(\langle a_i, x \rangle) - A^Tb \\
+      \nabla^2 l(x) &= \sum_{i=1}^n a_ia_i^T \exp(\langle a_i, x \rangle).
+    \end{align*}
+    There is no global upper bound for $\nabla^2 l(x)$ since the
+    $\exp(\langle a_i, x \rangle)$ factor is unbounded as function of $x$, so
+    $\nabla l$ is not Lipschitz-continuous.
+  \end{proof}
 \end{enumerate}
 
 
@@ -246,14 +259,61 @@ its gradient is $\beta$-Lipschitz continuous.
 \begin{enumerate}
 \item Given the sample (logistic) data set and starter code, implement gradient descent for $\ell_2$-regularized logistic regression. 
 Plot (a) the objective value and (b) the norm of the gradient 
-(as a measure of optimality) on two separate figures. For the figure in (b), make sure the y-axis is on a logarithmic scale. 
+(as a measure of optimality) on two separate figures. For the figure in (b), make sure the y-axis is on a logarithmic scale.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{logistic_gradient_descent.pdf}
+  \caption{Gradient descent used to minimize the logisitic regression objective
+    on the randomly generated sample data.}
+  \label{fig:logistic_gradient_descent}
+\end{figure}
+
+See Figure \ref{fig:logistic_gradient_descent}. I used the result in problem
+5(b) to choose a constant step size of $\frac{1}{\beta}$.
+
+    
 \item Implement Newton's method for the same problem. Does the method converge? If necessary, use the line search routine provided
-to scale your updated directly to ensure descent. Add the plots for Newton's method (a) and (b) to your Figures 1 and 2. What do you notice? 
+  to scale your updated directly to ensure descent. Add the plots for Newton's method (a) and (b) to your Figures 1 and 2. What do you notice?
+
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{logistic_newton.pdf}
+    \caption{Newton's method used to minimize the logisitic regression objective
+      on the randomly generated sample data.}
+    \label{fig:logistic_newton}
+  \end{figure}
+
+See Figure \ref{fig:logistic_newton}. The method converges much more quickly:
+gradient descent takes 131 steps, and Newton's method merely takes 5 steps.
+  
 \item Using the sample (Poisson) data  and starter code provided, implement gradient descent and Newton's method for $\ell_2$-regularized Poisson regression. You may need to use the line search routine for 
-both algorithms. Make the same plots as you did for the logistic regression examples. 
+  both algorithms. Make the same plots as you did for the logistic regression examples.
+
+  \begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{poisson_gradient_descent.pdf}
+  \caption{Gradient descent used to minimize the Poisson regression objective on
+    the randomly generated sample data.}
+  \label{fig:poisson_gradient_descent}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{poisson_newton.pdf}
+  \caption{Newton's method used to minimize the Poisson regression objective on
+    the randomly generated sample data.}
+  \label{fig:poisson_newton}
+\end{figure}
+
+See Figures \ref{fig:poisson_gradient_descent} and \ref{fig:poisson_newton}.
+  
 \item What do you notice qualitatively about steepest descent vs. Newton?
 
- 
+  Steepest descent takes many more iterations to converge. In particular, the
+  linear rate of convergence is evident in the plots of the gradient norms for
+  steepest descent. Likewise, in the plots of the gradient norms for Newton's
+  method, we see quadratic rate of convergence as expected. 
 \end{enumerate}
 
 \bigskip\bigskip
