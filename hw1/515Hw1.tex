@@ -88,7 +88,8 @@ and $h$ is the composition $g(Ax)$, then
     \end{equation*}
     Since $D_x F = \nabla^2 h(x)$, we have our desired result.    
   \end{proof}
-\item Use the formulas to compute the gradient and hessian of the logistic regression objective: 
+\item Use the formulas to compute the gradient and Hessian of the logistic
+  regression objective:
 \[
 \sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle))- b^TAx
 \]
@@ -109,7 +110,7 @@ where $a_i$ denote the rows of $A$.
   Applying the previous results to each term, we obtain
   \begin{align*}
     \nabla l(x) &= \sum_{i=1}^n a_i\frac{\exp(\langle a_i , x \rangle)}{1 + \exp(\langle a_i , x \rangle)} - A^Tb \\
-    \nabla^2 l(x) &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i , x \rangle)}{\left(\exp(1 + \langle a_i , x \rangle)\right)^2}.
+    \nabla^2 l(x) &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i , x \rangle)}{\left(1 + \exp(\langle a_i , x \rangle)\right)^2}.
   \end{align*}
 \end{proof}
 \end{enumerate}
@@ -191,13 +192,115 @@ h(x) = f(g(x)).
 \) 
 \begin{enumerate}
 \item If $f$ and $g$ are convex, show it is possible for $h$ to be nonconvex (give an example). What additional condition ensures 
-the convexity of the composition? 
-\item If $f$ is convex and $g$ is concave, what additional hypothesis that guarantees $h$ is convex? 
-\item Show that if $f: \mathbb{R}^m \rightarrow \mathbb{R}$ is convex and $g: \mathbb{R}^n \rightarrow \mathbb{R}^m$ affine, then $h$ is convex. 
+  the convexity of the composition?
+
+  \begin{proof}
+    Consider $f(x) = \exp(-x)$ and $g(x) = \frac{x^2}{2}$, so
+    $h(x) = \exp\left(-\frac{x^2}{2}\right)$. $f$ and $g$ are convex since we
+    have $f^{\prime\prime}(x) = \exp(-x) \gneq 0$ and
+    $g^{\prime\prime}(x) = 1 \gneq 0$. In fact, $f$ and $g$ are strictly convex
+    in $\mathbb{R}$.
+
+    But, we have that
+    $h^{\prime\prime}(x) = \left(x^2 - 1\right)\exp\left(-\frac{x^2}{2}\right)$,
+    and $h(x) \lneq 0$ for $x \in (0, 1)$, so $h$ is not convex.
+  \end{proof}
+
+  With certain conditions, we can ensure that $h$ is convex. $h$ is convex if
+  and only if
+  $f^\prime\left(g(x)\right)g^{\prime\prime}(x) \geq
+  -f^{\prime\prime}\left(g(x)\right)\left[g^\prime(x)\right]^2$ for all $x$.
+  \begin{proof}
+    We have that
+    $h^{\prime\prime}(x) = f^\prime\left(g(x)\right)g^{\prime\prime}(x) +
+    f^{\prime\prime}\left(g(x)\right)\left[g^\prime(x)\right]^2$, so
+    \begin{equation*}
+      \text{$h$ is convex} \Leftrightarrow
+      h^{\prime\prime}(x) \geq 0 \Leftrightarrow
+      f^\prime\left(g(x)\right)g^{\prime\prime}(x) \geq
+      -f^{\prime\prime}\left(g(x)\right)\left[g^\prime(x)\right]^2
+    \end{equation*}
+  \end{proof}
+  
+  Since $f$ and $g$ are convex, we have that
+  $f^{\prime\prime}\left(g(x)\right)\left[g^\prime(x)\right]^2 \geq 0$ and
+  $g^{\prime\prime}(x) \geq 0$. Thus, one way to ensure that this inequality
+  holds is for $f^\prime(x) \geq 0$, that is, for $f$ be monotonically
+  increasing.
+  
+\item If $f$ is convex and $g$ is concave, what additional hypothesis that guarantees $h$ is convex?
+
+  We can use the same inequality as in the previous part, but we note that
+  $g^{\prime\prime}(x) \leq 0$. Thus, if $f(x) \leq 0$, that is $f$ is
+  monotonically decreasing, $h$ will be convex.
+
+\item Show that if $f: \mathbb{R}^m \rightarrow \mathbb{R}$ is convex and $g: \mathbb{R}^n \rightarrow \mathbb{R}^m$ affine, then $h$ is convex.
+
+  \begin{proof}
+    If $g$ is affine, we can write $g(x) = Ax = b$ for
+    $A \in \mathbb{R}^m \times \mathbb{R}^n$ and $b \in \mathbb{R}^m$.
+    
+    In this case, we have that $\nabla h(x) = A^T\nabla f(g(x))$ and
+    $\nabla^2 h(x) = A^T \nabla^2 f(g(x)) A$ by Problem 1. Since $f$ is convex,
+    $\nabla^2 f(g(x))$ is positive semidefinite, so have the spectral
+    decomposition $\nabla^2 f(g(x)) = SDS^{-1} = SD^{1/2}D^{1/2}S^T$, where the
+    columns of $S$ are orthonormal eigenvectors and $D$ is a diagonal matrix of
+    nonnegative eigenvalues.
+
+    So, we have that
+    \begin{align*}
+      \nabla^2 h(x)
+      &= A^T \nabla^2 f(g(x)) A \\
+      &= A^TSD^{1/2}D^{1/2}S^TA \\
+      &= \left(D^{1/2}S^TA\right)^T\left(D^{1/2}S^TA\right),
+    \end{align*}
+    which is a Gramian matrix, which are positive semidefinite. By positive
+    semidefiniteness of its Hessian, it follows that $h$ is also convex.
+  \end{proof}
+  
 \item Show that the following functions are convex: 
 \begin{enumerate}
 \item Logistic regression objective: $\sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle))- b^TAx$
-\item Poisson regression objective: $\sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx$. 
+  \begin{proof}
+    In Problem 1, we showed that the Hessian is
+    $$\sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i , x \rangle)}{
+      \left(1 + \exp(\langle a_i , x \rangle)\right)^2}.$$
+
+    With some algebra, we have that
+    \begin{align*}
+      \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i , x \rangle)}{
+      \left(1 + \exp(\langle a_i , x \rangle)\right)^2}
+      &=
+      \sum_{i=1}^n \left(\frac{\exp(\langle a_i , x \rangle / 2)}{1 + \exp(\langle a_i , x \rangle)}a_i\right)
+        \left(\frac{\exp(\langle a_i , x \rangle / 2)}{1 + \exp(\langle a_i , x \rangle)}a_i\right)^T \\
+      &= \tilde{A}^T\tilde{A},  
+    \end{align*}
+    where the $i$th row of $\tilde{A}$ is
+    $$
+    \left(\frac{\exp(\langle a_i , x \rangle / 2)}{1 + \exp(\langle a_i , x \rangle)}a_i\right)^T.
+    $$
+
+    This is Gramian matrix, so it is positive semidefinite. Thus, the logistic
+    regression objective is convex.
+  \end{proof}
+\item Poisson regression objective: $\sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx$.
+  \begin{proof}
+    The proof for the Poisson objective is similar. In Problem 5(c), we show
+    that the Hessian is $$\sum_{i=1}^n a_ia_i^T \exp(\langle a_i, x \rangle).$$
+
+    Doing algebra, we find that
+    \begin{align*}
+      \sum_{i=1}^n a_ia_i^T \exp(\langle a_i, x \rangle)
+      &= \sum_{i=1}^n \left(\exp(\langle a_i, x \rangle / 2)a_i\right)\left(\exp(\langle a_i, x \rangle / 2) a_i\right)^T 
+      \\
+      &= \tilde{A}^T\tilde{A},
+    \end{align*}
+    where the $i$th row of $\tilde{A}$ is
+    $\left(\exp(\langle a_i, x \rangle / 2) a_i\right)^T.$
+
+    Thus, the Hessian of the Poisson objective is positive semidefinite, so the
+    objective function is convex.
+  \end{proof}
 \end{enumerate}
 \end{enumerate}
 
@@ -275,9 +378,9 @@ its gradient is $\beta$-Lipschitz continuous.
 \item Do the gradients for Poisson regression admit a global Lipschitz constant?
 
   \begin{proof}
-    They do not. The poisson objective is
+    They do not. The Poisson objective is
     $l(x) = \sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx$, the gradient and
-    hessian is
+    Hessian is
     \begin{align*}
       \nabla l(x) &= \sum_{i=1}^n a_i \exp(\langle a_i, x \rangle) - A^Tb \\
       \nabla^2 l(x) &= \sum_{i=1}^n a_ia_i^T \exp(\langle a_i, x \rangle).
