@@ -351,7 +351,10 @@ f(\lambda x + (1-\lambda)y) < \lambda f(x) + (1-\lambda) f(y), \quad \lambda \in
     a local minimizer of if $A^T\left(Ax - b\right) = 0$, so we must have a
     solution to the linear system $A^TAx = A^Tb$ for $x$ to be local
     minimizer. If $x$ is local minimizer, it is a global minimizer by Corollary
-    2.19. For $x$ to be a unique minimizer, $A^TAx = A^Tb$ must have a unique
+    2.19. There is always a solution (you can use the Moore-Penrose inverse), so
+    we always have such a minimizer.
+
+    For $x$ to be a unique minimizer, $A^TAx = A^Tb$ must have a unique
     solution. This will occur if and only if the null space of $A^TA$ is the
     empty set, that is, $A^TA$ is positive definite.
   \end{proof}
@@ -362,6 +365,52 @@ f(\lambda x + (1-\lambda)y) < \lambda f(x) + (1-\lambda) f(y), \quad \lambda \in
 \]
 
 \begin{proof}
+  This always has a unique solution since the objective is $\alpha$-strongly
+  convex with $\alpha > 0$.
+  
+  We can rewrite the objective as
+  \begin{align*}
+    f(x) &= g(x) + h(x)\\
+    g(x) &= \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle)) + \lambda(1-\alpha)\|x\|^2 \\
+    h(x) &= \lambda\alpha \|x\|_1.
+  \end{align*}  
+
+  We have that
+  \begin{align*}
+    \nabla^2 g(x) = \tilde{A}^T\tilde{A} + 2\lambda(1 - \alpha)I,
+  \end{align*}
+  where the $i$th row of $\tilde{A}$ is
+  $$
+  \left(\frac{\exp(\langle a_i , x \rangle / 2)}{1 + \exp(\langle a_i , x \rangle)}a_i\right)^T.
+  $$
+  by Problem 3(d)(i). By using the spectral decomposition of
+  $\tilde{A}^T\tilde{A}$, we have that
+  $\lVert \nabla^2 g(x) \rVert =
+  \lambda_{\operatorname{max}}\left(\tilde{A}^T\tilde{A}\right) + 2\lambda(1 -
+  \alpha) \gneq 0$ for all $x$, so $g$ is strongly convex with
+  $\alpha = \lambda_{\operatorname{max}}\left(\tilde{A}^T\tilde{A}\right) +
+  2\lambda(1 - \alpha) \gneq 0$. Since $g$ is smooth, we'll have that
+  $$
+  g(y) \geq g(x) + \langle \nabla g(x), y - x \rangle + \frac{\alpha}{2}\lVert y - x\rVert_2^2
+  $$
+  for all $y$.
+
+  Since we showed all norms are convex in Problem 2(c), $h$ is convex. $h$ is
+  $0$-strongly convex since we can write
+  $$
+  h(y) \geq h(x) + \langle v, y - x \rangle~\text{where}~v \in \partial h(x)
+  $$
+  for all $y$, where $\partial h(x)$ is the subgradient of $h$ at $x$.
+
+  Combining the two inequalities, we'll have that
+  \begin{align*}
+    f(y) = g(y) + h(y)
+    &\geq
+  g(x) + h(x) + \langle \nabla g(x) + v, y - x \rangle + \frac{\alpha}{2}\lVert y - x\rVert_2^2 \\
+    &= f(x) + \langle \nabla g(x) + v, y - x \rangle + \frac{\alpha}{2}\lVert y - x\rVert_2^2.
+  \end{align*}
+  Since the last term is always positive, $\nabla g(x) + v \in \partial f(x)$,
+  so $f$ is also $\alpha$-strongly convex. 
 \end{proof}
 \end{enumerate}
 \end{enumerate}
