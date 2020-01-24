@@ -361,7 +361,7 @@ f(\lambda x + (1-\lambda)y) < \lambda f(x) + (1-\lambda) f(y), \quad \lambda \in
   % \item Logistic: $\min_x \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle))- b^TAx$
 \item Elastic net logistic: 
 \[
-\min_x \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle)) + \lambda(\alpha \|x\|_1 + (1-\alpha)\|x\|^2), \quad \lambda>0, \alpha \in (0,1)
+\min_x \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle)) - b^TAx + \lambda(\alpha \|x\|_1 + (1-\alpha)\|x\|^2), \quad \lambda>0, \alpha \in (0,1)
 \]
 
 \begin{proof}
@@ -371,7 +371,7 @@ f(\lambda x + (1-\lambda)y) < \lambda f(x) + (1-\lambda) f(y), \quad \lambda \in
   We can rewrite the objective as
   \begin{align*}
     f(x) &= g(x) + h(x)\\
-    g(x) &= \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle)) + \lambda(1-\alpha)\|x\|^2 \\
+    g(x) &= \sum_{i=1}^n \log(1 + \exp(\langle a_i, x\rangle)) - b^TAx + \lambda(1-\alpha)\|x\|^2 \\
     h(x) &= \lambda\alpha \|x\|_1.
   \end{align*}  
 
@@ -446,15 +446,15 @@ its gradient is $\beta$-Lipschitz continuous.
   \end{proof}
 \item Find a global bound for $\beta$ of the regularized logistic objective 
 \[
-\sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle)) + \frac{\lambda}{2}\|x\|^2. 
+\sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle)) - b^TAx + \frac{\lambda}{2}\|x\|^2. 
 \]
 \begin{proof}
   If
-  $l(x) = \sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle)) +
+  $l(x) = \sum_{i=1}^n \log(1+\exp(\langle a_i, x\rangle)) - b^TAx +
   \frac{\lambda}{2}\|x\|^2$, then
   \begin{align*}
     \nabla l(x)
-    &= \sum_{i=1}^n a_i\frac{\exp(\langle a_i, x\rangle)}{1+\exp(\langle a_i, x\rangle)} + \lambda x \\
+    &= \sum_{i=1}^n a_i\frac{\exp(\langle a_i, x\rangle)}{1+\exp(\langle a_i, x\rangle)} - A^Tb + \lambda x \\
     \nabla^2 l(x)
     &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i, x\rangle)}{\left(1+\exp(\langle a_i, x\rangle)\right)^2} + \lambda I
       \leq \frac{1}{4} \sum_{i=1}^n a_ia_i^T + \lambda I = \frac{1}{4}A^TA + \lambda I.
