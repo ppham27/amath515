@@ -225,19 +225,19 @@ h(x) = f(g(x)).
   Since $f$ and $g$ are convex, we have that
   $f^{\prime\prime}\left(g(x)\right)\left[g^\prime(x)\right]^2 \geq 0$ and
   $g^{\prime\prime}(x) \geq 0$. Thus, one way to ensure that this inequality
-  holds is for $f^\prime(x) \geq 0$, that is, for $f$ be monotonically
+  holds is for $f^\prime(x) \geq 0$, that is, for $f$ to be monotonically
   increasing.
   
 \item If $f$ is convex and $g$ is concave, what additional hypothesis that guarantees $h$ is convex?
 
   We can use the same inequality as in the previous part, but we note that
-  $g^{\prime\prime}(x) \leq 0$. Thus, if $f(x) \leq 0$, that is $f$ is
+  $g^{\prime\prime}(x) \leq 0$. Thus, if $f^\prime(x) \leq 0$, that is $f$ is
   monotonically decreasing, $h$ will be convex.
 
 \item Show that if $f: \mathbb{R}^m \rightarrow \mathbb{R}$ is convex and $g: \mathbb{R}^n \rightarrow \mathbb{R}^m$ affine, then $h$ is convex.
 
   \begin{proof}
-    If $g$ is affine, we can write $g(x) = Ax = b$ for
+    If $g$ is affine, we can write $g(x) = Ax + b$ for
     $A \in \mathbb{R}^m \times \mathbb{R}^n$ and $b \in \mathbb{R}^m$.
     
     In this case, we have that $\nabla h(x) = A^T\nabla f(g(x))$ and
@@ -317,8 +317,8 @@ f(\lambda x + (1-\lambda)y) < \lambda f(x) + (1-\lambda) f(y), \quad \lambda \in
 \item Give an example of a strictly convex function that 
   does not have a minimizer. Explain why your function is strictly convex.
   \begin{proof}
-    Consider $f(x) = \exp(x)$. $f^{\prime\prime} = \exp(x) \gneq 0$, so $f$ is
-    strictly convex. Because $f^\prime(x) = \exp(x) \neq 0$, for no
+    Consider $f(x) = \exp(x)$. $f^{\prime\prime}(x) = \exp(x) \gneq 0$, so $f$
+    is strictly convex. Because $f^\prime(x) = \exp(x) \neq 0$, for no
     $x \in \mathbb{R}$ does $f$ satisfy the necessary condition
     $f^\prime(x) = 0$ to be a minimizer.
   \end{proof}
@@ -491,8 +491,8 @@ Plot (a) the objective value and (b) the norm of the gradient
 \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{logistic_gradient_descent.pdf}
-  \caption{Gradient descent used to minimize the logisitic regression objective
-    on the randomly generated sample data.}
+  \caption{Gradient descent with a constant step size was used to minimize the
+    logistic regression objective on the randomly generated sample data.}
   \label{fig:logistic_gradient_descent}
 \end{figure}
 
@@ -520,8 +520,8 @@ gradient descent takes 131 steps, and Newton's method merely takes 5 steps.
   \begin{figure}
   \centering
   \includegraphics[width=\textwidth]{poisson_gradient_descent.pdf}
-  \caption{Gradient descent used to minimize the Poisson regression objective on
-    the randomly generated sample data.}
+  \caption{Gradient descent with line search was used to minimize the Poisson
+    regression objective on the randomly generated sample data.}
   \label{fig:poisson_gradient_descent}
 \end{figure}
 
@@ -533,7 +533,9 @@ gradient descent takes 131 steps, and Newton's method merely takes 5 steps.
   \label{fig:poisson_newton}
 \end{figure}
 
-See Figures \ref{fig:poisson_gradient_descent} and \ref{fig:poisson_newton}.
+See Figures \ref{fig:poisson_gradient_descent} and
+\ref{fig:poisson_newton}. Line search was used to determine the step size at
+each step in gradient descent.
   
 \item What do you notice qualitatively about steepest descent vs. Newton?
 
