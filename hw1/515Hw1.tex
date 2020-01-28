@@ -1,3 +1,4 @@
+
 \documentclass[11pt]{amsart}
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
 \geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
@@ -456,11 +457,25 @@ its gradient is $\beta$-Lipschitz continuous.
     \nabla l(x)
     &= \sum_{i=1}^n a_i\frac{\exp(\langle a_i, x\rangle)}{1+\exp(\langle a_i, x\rangle)} - A^Tb + \lambda x \\
     \nabla^2 l(x)
-    &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i, x\rangle)}{\left(1+\exp(\langle a_i, x\rangle)\right)^2} + \lambda I
-      \leq \frac{1}{4} \sum_{i=1}^n a_ia_i^T + \lambda I = \frac{1}{4}A^TA + \lambda I.
+    &= \sum_{i=1}^n a_ia_i^T\frac{\exp(\langle a_i, x\rangle)}{\left(1+\exp(\langle a_i, x\rangle)\right)^2} + \lambda I.
   \end{align*}
-  from the derivation in Problem 1. Thus,
-  $\beta = \lambda_{\operatorname{max}}\left(\frac{1}{4}A^TA + \lambda I\right).$
+  from the derivation in Problem 1. Let $D$ be an $n \times n$ diagonal matrix
+  with entries
+  $$D_{ii} = \frac{\exp(\langle a_i, x\rangle)}{\left(1+\exp(\langle a_i,
+      x\rangle)\right)^2}.$$ Then, we can rewrite
+  $\nabla^2 l(x) = A^TDA + \lambda I$.
+
+  We can also rewrite $A = U \Sigma V$ with its singular value
+  decomposition. Let $\sigma_{\operatorname{max}}$ be maximum value of $\Sigma$. For some unit
+  vector $u$, we'd have that
+  \begin{equation*}
+    u^T\left(A^TDA + \lambda I\right)u \leq \sigma_{\operatorname{max}}^2 \max\left(D_{ii}\right) + \lambda = \frac{1}{4}\sigma_{\operatorname{max}}^2  + \lambda.
+  \end{equation*}
+  $\sigma_{\operatorname{max}}^2$ is just the maximum eigenvalue of $A^TA$.
+  
+  Thus,
+  $\beta = \lambda_{\operatorname{max}}\left(\frac{1}{4}A^TA + \lambda
+    I\right).$
 \end{proof}
 \item Do the gradients for Poisson regression admit a global Lipschitz constant?
 
