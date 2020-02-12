@@ -1,0 +1,241 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage[all]{xy}
+\usepackage{epstopdf}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+
+% these packages make it easy to include figures in the text. 
+\usepackage{float}
+\restylefloat{figure}
+
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cC}{\mathcal{C}}
+\newcommand{\cF}{\mathcal{F}}
+\newcommand{\prox}{\mathrm{prox}}
+
+
+
+\begin{document}
+{\Large Name:}  \\
+\begin{center}
+\Large AMATH 515 \hskip 2in Homework Set 2\\
+\end{center}
+\vskip 32pt
+
+\begin{enumerate}
+
+
+
+\item Recall that 
+\[
+\begin{aligned}
+\mbox{prox}_{t f}(y) &= \arg\min_{x} \frac{1}{2t}\|x-y\|^2 + f(x)\\
+f_t(y) &= \min_x \frac{1}{2t}\|x-y\|^2 + f(x).
+\end{aligned}
+\] 
+Suppose $f$ is convex. 
+\vskip 16pt
+\begin{enumerate}
+%\item Prove $\mbox{prox}_f(x) + \mbox{prox}_{f^*}(x) = x$.
+
+\item Prove that $f_t$ is convex.  
+\bigskip
+
+\item Prove that $\prox_{t f}$ is a single-valued mapping. 
+\bigskip
+
+\item Compute $\prox_{t f}$ and $f_t$, where $f(x) = \|x\|_1$. 
+%One way to do this is to consider the scalar case, and explicitly compute $f'(t)$ 
+%\[
+%f'_t(x) = \frac{1}{t} (x-\prox_{t f}(x)).
+%\]
+%Now, just find a function that has this derivative. 
+\bigskip
+\item Compute $\prox_{t f}$ and $f_t$ for $f = \delta_{\mathbb{B}_{\infty}}(x)$, 
+where $\mathbb{B}_\infty = [-1,1]^n$.
+
+\bigskip
+\end{enumerate}
+
+\vskip 32pt
+
+\item More prox identities. 
+\vskip 16pt
+\begin{enumerate}
+%\item Prove $\mbox{prox}_f(x) + \mbox{prox}_{f^*}(x) = x$.
+
+\item Suppose $f$ is convex and let $g(x) = f(x) + \frac{1}{2}\|x-x_0\|^2$. 
+Find formulas for $\prox_{t g}$ and $g_t$ in terms of $\prox_{t f}$ and $f_t$.
+\bigskip
+
+\item The elastic net penalty is used to detect groups of correlated predictors:
+\[
+g(x) = \beta \|x\|_1 + (1-\beta) \frac{1}{2}\|x\|^2, \quad \beta \in (0,1).
+\] 
+Write down the formula for $\prox_{t g}$ and $g_t$.
+\bigskip
+
+\item Let $f(x) = \frac{1}{2}\|Cx\|^2$. Write $\prox_{t f}(y)$ in closed form.
+
+\bigskip
+
+\item Let $f(x) = \|x\|_2$. Write $\prox_{tf}(y)$ in closed form.
+
+\end{enumerate}
+\end{enumerate}
+
+\vskip 32pt
+\noindent {\bf \large Coding Assignment}
+\vskip 8pt
+Please download \texttt{515Hw2\_Coding.ipynb} \texttt{solvers.py} and \texttt{mnist01.npy} to complete the coding problem (3), (4) and (5).
+
+\begin{enumerate}
+\bigskip
+\item[(3)] Complete three generic solvers we learned from the class in \texttt{solvers.py}, including,
+\begin{itemize}
+\item proximal gradient descent,
+\item accelerated gradient descent.
+\item accelerated proximal gradient descent.
+\end{itemize}
+
+\vskip 32pt
+\item[(4)] Compressive sensing, consider the sparse regression problem,
+\[
+\min_x~~\frac{1}{2}\|Ax - b\|^2 + \lambda \|x\|_1
+\]
+where $A\in\mathbb{R}^{m \times n}$ and $m < n$ and this is an under determine system.
+Fortunately, we have the prior knowledge of $x$ being sparse, by adding the $\ell_1$ regularizer, we could recover the original signal.
+
+\vskip 8pt \noindent
+{\bf Remark}: we choose $\lambda = \|A^\top b\|_\infty/10$, the reason of it will be more clear when come to duality.
+
+\vskip 16pt
+\begin{enumerate}
+\item[(a)] By treating $f(x) = \frac{1}{2}\|Ax - b\|^2$ and $g(x) = \lambda \|x\|_1$, complete the function w.r.t. to $f$ and $g$.
+\bigskip
+\item[(b)] Apply the proximal gradient algorithm, can you recover the signal?
+\bigskip
+\item[(c)] Apply the accelerated proximal gradient algorithm, is it faster compare to (b)?
+\end{enumerate}
+
+\vskip 32pt
+\item[(5)] Logistic regression on MNIST data, recall the logistic regression problem,
+\[
+\min_{x}~~\sum_{i=1}^m \left\{\ln(1 + \exp(\langle a_i, x \rangle)) - b_i \langle a_i, x \rangle \right\} + \frac{\lambda}{2}\|x\|^2.
+\]
+We will try to use logistic regression to classify the ``0'' and ``1'' images from MNIST.
+
+\vskip 8pt \noindent
+In this specific example, $a_i$ is our image (vectorized), and $b_i$ is the corresponding label.
+By solving the above optimization problem, we want to obtain an classifier, so that for a new image $a_\text{new}$, we could say
+\[\begin{cases}
+a_\text{new} \text{ is a 0}, &\text{if } \langle a_\text{new}, x \rangle \le 0\\
+a_\text{new} \text{ is a 1}, &\text{if } \langle a_\text{new}, x \rangle > 0
+\end{cases}.\]
+
+\vskip 16pt
+\begin{enumerate}
+\item[(a)] Complete the function, gradient and Hessian for the logistic regression.
+\bigskip
+\item[(b)] Apply gradient, accelerate gradient and Newton's method to solve the problem. Which one is the fastest and which one is the slowest?
+\bigskip
+\item[(c)] What is your accuracy of the classification for the test data.
+\end{enumerate}
+
+\end{enumerate}
+
+
+%\item Proximal gradient method. 
+%
+%\noindent We have written a generic proximal gradient method to solve 
+%\[
+%\min_{x} g(x) + h(x).
+%\]
+%The inputs are be $x_0$, $\beta$, funG, proxH and tolerance $\epsilon$ with 
+%\begin{itemize}
+%\item $x_0$ an initial point 
+%\item $\beta$ Lipchitz constant for $\nabla g(x)$
+%\item funG a function handle for $g$,  with calling sequence 
+%\[
+%\text{val = funG!(x, g)}
+%\]
+%\item proxH a function handle for $\prox_{t h}$ with calling sequence
+%\[
+%\text{proxH!(x, $t$)}.
+%\]
+%and 
+%\item $\epsilon$ a tolerance, in particular exit when 
+%\[
+%\|x_{k+1} - x_k\| \leq \epsilon.
+%\]
+%\end{itemize}
+%\begin{enumerate}
+%\item Implement the prox of the 1-norm.  
+%
+%\item Implement the least squares objective to match the specification above. 
+%
+%\item Generate data using the compressive sensing module, and use the code 
+%(together with your two functions) to solve 
+%
+%\[
+%\min_{x} \frac{1}{2}\|Ax - b\|^2 + \lambda \|x\|_1
+%\]
+%where you can take $\lambda = \|A^Tb\|_\infty/10$.
+%
+%\item Plot your solution on the same axes as the true sparse signal. Did you recover the support? 
+%
+%\end{enumerate}
+%
+%\bigskip \bigskip 
+%
+%
+%\item Fast (prox-)gradient methods. 
+%
+%\bigskip
+%
+%\begin{enumerate}
+%
+%\item Generate a logistic regression problem using the starter code.  
+%
+%\bigskip
+%\item Consider $l_1$ regularization, i.e.
+%\[
+%\min_{x} \sum_{i=1}^m \log(1 + \exp(\langle a_i, x\rangle)) - b^TAx + \lambda\|x\|_1.
+%\]
+%Implement both regular prox-gradient and FIESTA, then compare them in terms of convergence.
+%
+%\bigskip
+%\item Now consider $l_2$ regularization, i.e.
+%\[
+%\min_{x} \sum_{i=1}^m \log(1 + \exp(\langle a_i, x\rangle)) - b^TAx + \frac{\lambda}{2}\|x\|^2. 
+%\]
+%Implement Algorithm 3 in Chapter 2 of course text (section 2.8). Use good estimates of $\beta$ and $t$.
+%
+%\bigskip
+%
+%\item Compare Algorithm 3 with regular gradient descent on $f(x_k) - f^*$ in log scale, where $f^* = 334.35356$. Do you see a significant speedup? 
+%
+%\bigskip
+%
+%\item How does the condition number of the matrix $A$ affect your answer for (d)? 
+%
+%\end{enumerate}
+
+\bigskip
+
+
+
+\bigskip\bigskip
+
+
+
+
+
+
+\end{document}  
