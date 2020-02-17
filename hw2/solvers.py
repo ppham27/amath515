@@ -64,8 +64,8 @@ def optimizeWithPGD(x0, func_f, func_g, grad_f, prox_g, beta_f, tol=1e-6, max_it
     err = tol + 1.0
     while err >= tol:
         #####
-        # TODO: complete the proximal gradient step
-        x_new = ???
+        # Do a normal gradient step and then project.
+        x_new = prox_g(x - step_size * g, step_size)
         #####
         #
         # update information
@@ -142,10 +142,9 @@ def optimizeWithAGD(x0, func, grad, beta, tol=1e-6, max_iter=1000):
     while err >= tol:
         # proximal gradient descent step
         #####
-        # TODO: complete the accelerate gradient step
-        x_new = ???
-        t_new = ???
-        y_new = ???
+        x_new = y - step_size * g
+        t_new = t + 1.
+        y_new = x_new + ((t - 1.) / (t_new + 1.)) * (x_new - x)
         #####
         #
         # update information
@@ -163,7 +162,7 @@ def optimizeWithAGD(x0, func, grad, beta, tol=1e-6, max_iter=1000):
         # check if exceed maximum number of iteration
         iter_count += 1
         if iter_count >= max_iter:
-            print('Proximal gradient descent reach maximum of iteration')
+            print('Accelerated gradient descent reach maximum of iteration')
             return x, obj_his[:iter_count+1], err_his[:iter_count+1], 1
     #
     return x, obj_his[:iter_count+1], err_his[:iter_count+1], 0
@@ -224,10 +223,9 @@ def optimizeWithAPGD(x0, func_f, func_g, grad_f, prox_g, beta_f, tol=1e-6, max_i
     err = tol + 1.0
     while err >= tol:
         #####
-        # TODO: complete the accelerate proximal gradient step
-        x_new = ???
-        t_new = ???
-        y_new = ???
+        x_new = prox_g(y - step_size * g, step_size)
+        t_new = t + 1
+        y_new = x_new + ((t - 1.) / (t_new + 1.)) * (x_new - x)
         #####
         #
         # update information

@@ -133,3 +133,4 @@ dmypy.json
 
 # Latex
 *.aux
+_region_.tex

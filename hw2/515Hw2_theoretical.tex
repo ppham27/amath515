@@ -22,7 +22,7 @@
 
 
 \begin{document}
-{\Large Name:}  \\
+{\Large Name: Philip Pham}  \\
 \begin{center}
 \Large AMATH 515 \hskip 2in Homework Set 2\\
 \end{center}
@@ -44,11 +44,38 @@ Suppose $f$ is convex.
 \begin{enumerate}
 %\item Prove $\mbox{prox}_f(x) + \mbox{prox}_{f^*}(x) = x$.
 
-\item Prove that $f_t$ is convex.  
-\bigskip
+\item Prove that $f_t$ is convex.
+  \begin{proof}
+    Let $h(x, y) = \frac{1}{2t}\|x-y\|^2 + f(x)$, so $f_t(y) = \min_x h(x,
+    y)$. $h$ is a convex function of $x$ as it is the sum of a $\ell_2$-norm and
+    a convex function. Only the first term depends on $y$, which is a
+    $\ell_2$-norm, which is convex, so $h$ is convex as a function of $y$.
 
+    Now, using the convexity, we have that
+    \begin{align*}
+      f_t\left(\lambda y_1 + (1-\lambda)y_2\right)
+      &= \min_x h\left(x, \lambda y_1 + (1-\lambda)y_2\right) \\
+      &\leq h\left(\lambda x_1 + (1-\lambda)x_2, \lambda y_1 + (1-\lambda)y_2\right) \\
+      &\leq \lambda h\left(x_1, y_1\right) + (1-\lambda)h\left(x_2, y_2\right).
+    \end{align*}
+    We can choose $x_1$ and $x_2$ to be anything. For instance, we could choose
+    $x_1 = \arg\min_{x} h\left(x, y_1\right)$ and
+    $x_2 = \arg\min_{x} h\left(x, y_2\right)$. In this case, we'd have that
+    \begin{align*}
+      f_t\left(\lambda y_1 + (1-\lambda)y_2\right)
+      &\leq \lambda h\left(x_1, y_1\right) + (1-\lambda)h\left(x_2, y_2\right)
+        = \lambda f_t\left(y_1\right) + \left(1 - \lambda\right) f_t\left(y_2\right),
+    \end{align*}
+    so $f_t$ is convex.
+  \end{proof}
+  
 \item Prove that $\prox_{t f}$ is a single-valued mapping. 
-\bigskip
+  \begin{proof}
+    In $h$, the first term is strongly convex with $\alpha = t^{-1} \gneq
+    0$. Since $h$ is the sum of convex functions, $h$ will also be strongly
+    convex with $\alpha \gneq 0$. Therefore, $h$ has a unique global minimizer,
+    so $\prox_{t f}$ is a single-valued mapping.
+  \end{proof}
 
 \item Compute $\prox_{t f}$ and $f_t$, where $f(x) = \|x\|_1$. 
 %One way to do this is to consider the scalar case, and explicitly compute $f'(t)$ 
@@ -56,7 +83,39 @@ Suppose $f$ is convex.
 %f'_t(x) = \frac{1}{t} (x-\prox_{t f}(x)).
 %\]
 %Now, just find a function that has this derivative. 
-\bigskip
+
+  \begin{proof}
+    We can rewrite the objective as a sum of positive terms
+    \begin{align*}
+      \frac{1}{2t}\|x-y\|^2 + \|x\|_1
+      &= \sum_{i=1}^n\left[
+        \frac{1}{2t}\left(x_i - y_i\right)^2
+        +
+        |x_i|
+        \right].
+    \end{align*}
+    Each term is independent of each other, so we can minimize each term
+    separately. The derivate of each term is undefined at $x_i = 0$, but
+    otherwise,
+    \begin{equation*}
+      \frac{\partial}{\partial x_i}\left(
+        \frac{1}{2t}\left(x_i - y_i\right)^2 + |x_i|
+      \right)
+      = \frac{x_i - y_i}{t} + \operatorname{sign}\left(x_i\right).
+    \end{equation*}
+
+    Solving for $x_i$ when $|y_i| \geq t$, we find
+    $x_i = y_i - \operatorname{sign}\left(y_i\right)t$. Otherwise, we note that
+    the derivative is negative when $x_i < 0$ and positive when $x_i > 0$, so
+    the solution must be $x_i = 0$. Thus, we have that
+    \begin{equation*}
+      \left[\prox_{t f}(y)\right]_i = \begin{cases}
+        y_i - \operatorname{sign}\left(y_i\right)t, & |y_i| \geq t; \\
+        0, & \text{otherwise.}
+      \end{cases}
+    \end{equation*}
+  \end{proof}
+
 \item Compute $\prox_{t f}$ and $f_t$ for $f = \delta_{\mathbb{B}_{\infty}}(x)$, 
 where $\mathbb{B}_\infty = [-1,1]^n$.
 
