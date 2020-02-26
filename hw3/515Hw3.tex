@@ -1,0 +1,184 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage[all]{xy}
+\usepackage{epstopdf}
+\usepackage{color}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+
+% these packages make it easy to include figures in the text. 
+\usepackage{float}
+\restylefloat{figure}
+% newcommand
+\newcommand{\ip}[1]{\left\langle #1\right\rangle}
+
+
+
+\begin{document}
+{\Large Name:}  \\
+\begin{center}
+\Large AMATH 515 \hskip 2in Homework Set 3\\
+{\bf Due: Monday, March 9th by midnight.}. 
+\end{center}
+\bigskip
+\begin{enumerate}
+
+\item  Compute the conjugates of the following functions.  
+\begin{enumerate}
+\item $f(x) = \delta_{\mathbb{B}_{\infty}}(x)$.
+\item $f(x) = \delta_{\mathbb{B}_{2}}(x)$.
+\item $f(x) = \exp(x)$.
+\item $f(x) =  \log(1+\exp(x))$
+\item $f(x) = x\log(x)$
+\end{enumerate}
+
+
+\bigskip\bigskip
+
+
+
+\item  Let $g$ be any convex function; $f$ is formed using $g$.
+Compute $f^*$ in terms of $g^*$.  
+\begin{enumerate}
+\item $f(x) = \lambda g(x)$.
+\item $f(x) = g(x-a) + \langle x, b \rangle$.
+\item $f(x) = \inf_z \left\{g(x,z)\right\}$. 
+\item $f(x) = \inf_z \left\{\frac{1}{2}\|x-z\|^2 + g(z)\right\}$
+\end{enumerate}
+
+\bigskip\bigskip
+
+\item Moreau Identities.
+\begin{enumerate}
+\item  Derive the Moreau Identity: 
+\[
+\mbox{prox}_{f}(z) + \mbox{prox}_{f^*}(z) = z. 
+\]
+You may find the `Fenchel flip' useful. 
+
+\bigskip \bigskip
+
+%\item Take a look at this more detailed identity:  
+%\[
+%\mbox{prox}_{\alpha f}(z) = z - \alpha \mbox{prox}_{\frac{1}{\alpha}f^*}(z/\alpha).
+%\]
+%Don't prove this, but please remember it --- its very useful for coding. 
+
+\bigskip \bigskip
+
+\item Use either of the Moreau identities and 
+1a, 1b to check your formulas for 
+\[
+\mbox{prox}_{\|\cdot\|_1}, \quad \mbox{prox}_{\|\cdot\|_2}
+\]
+from last week's homework. 
+\end{enumerate}
+
+
+
+%\item Consider the following linear program: 
+%\[
+%\min_x c^Tx \quad \mbox{s.t.} \quad Ax \leq b, \quad x \geq 0.
+%\] 
+%Derive the dual problem we get from the perturbation 
+%\[
+%p(u) = \min_{x} c^Tx \quad \mbox{s.t.} \quad Ax \leq b + u, \quad x \geq 0.
+%\]
+
+%\bigskip\bigskip\bigskip
+
+%\item{Duals of Lasso Formulations}
+%
+%\begin{enumerate}
+%
+%\item Compute the dual of  the constrained Lasso problem
+%\[
+%\min_{x} \frac{1}{2}\|b - Ax\|^2 \quad \mbox {s.t.} \quad \|x\|_1 \leq \tau. 
+%\]
+%obtained from the perturbation 
+%\[
+%p(u) = \min_{x} \frac{1}{2}\|b - Ax + u\|^2 \quad \mbox {s.t.} \quad \|x\|_1 \leq \tau. 
+%\]
+%
+%\bigskip\bigskip
+%
+%\item Compute the dual for the modified problem  
+%\[
+%\min_{x} \|b - Ax\|_2 +\lambda \|x\|_1. 
+%\]
+%obtained from perturbation 
+%\[
+%p(u) = \min_{x} \|b - Ax + u\|_2 +\lambda \|x\|_1. 
+%\]
+%
+%
+%\end{enumerate}
+%
+%\bigskip\bigskip\bigskip
+
+\item Duals of regularized GLM. Consider the Generalized Linear Model family: 
+\[
+\min_{x} \sum_{i=1}^n g(\langle a_i, x\rangle) - b^TAx + R(x),
+\]
+Where $g$ is convex and $R$ is any regularizer. 
+\begin{enumerate}
+\item Write down the general dual obtained from the perturbation 
+\[
+p(u) = \min_{x} \sum_{i=1}^n g(\langle a_i, x\rangle + u_i) - b^TAx + R(x).
+\]
+\bigskip\bigskip
+\item Specify your formula to Ridge-regularized logistic regression: 
+\[
+\min_x \sum_{i=1}^n \log(1+\exp(\langle a_i, x \rangle))  - b^TAx  + \frac{\lambda}{2}\|x\|^2. 
+\]
+\bigskip\bigskip
+\item Specify your formula to 1-norm regularized Poisson regression: 
+\[
+\min_x \sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx +  \lambda\|x\|_1. 
+\]
+\end{enumerate}
+\bigskip \bigskip
+\end{enumerate}
+\noindent{\bf Coding Assignment}
+\vskip 8pt
+Please download \texttt{515Hw3\_Coding.ipynb} and \texttt{proxes.py} to complete problem (5).
+
+\vskip 16pt
+\begin{enumerate}
+\item[(5)] In this problem you will write a routine to project onto the capped simplex. 
+
+The Capped Simplex $\Delta_k$ is defined as follows: 
+\[
+\Delta_k := \left\{x: 1^Tx = k, \quad 0 \leq x_i \leq 1 \quad \forall i. \right\}
+\]
+This is the intersection of the $k$-simplex with the unit box. 
+
+The projection problem is given by 
+\[
+\mbox{proj}_{\Delta_k}(z) = \arg\min_{x \in \Delta_k} \frac{1}{2}\|x-z\|^2.
+\]
+\begin{enumerate}
+\item Derive the (1-dimensional) dual problem by focusing on the $1^Tx = k$ constraint. 
+\bigskip \bigskip
+\item Implement a routine to solve this dual. It's a scalar root finding problem, 
+so you can use the root-finding algorithm provided in the code.  
+\bigskip \bigskip
+\item Using the dual solution, write down a closed form formula for the projection.  
+Use this formula, along with your dual solver, to implement the projection. You can use the unit test 
+provided to check if your code id working correctly. 
+
+
+\end{enumerate}
+
+
+
+
+\end{enumerate}
+
+
+\end{document}  
