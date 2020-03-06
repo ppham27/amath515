@@ -2,7 +2,7 @@
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
 \geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
 %\geometry{landscape}                % Activate for for rotated page geometry
-%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage[all]{xy}
@@ -20,7 +20,7 @@
 
 
 \begin{document}
-{\Large Name:}  \\
+{\Large Name: Philip Pham}  \\
 \begin{center}
 \Large AMATH 515 \hskip 2in Homework Set 3\\
 {\bf Due: Monday, March 9th by midnight.}. 
@@ -31,9 +31,90 @@
 \item  Compute the conjugates of the following functions.  
 \begin{enumerate}
 \item $f(x) = \delta_{\mathbb{B}_{\infty}}(x)$.
+  \begin{proof}
+    We have that
+    \begin{equation*}
+      \boxed{
+        f^\star(x) =
+        \delta^\star_{\mathbb{B}_{\infty}}(x)
+        = \max_{y \in \mathbb{B}_{\infty}} \left\langle x, y \right\rangle.}
+    \end{equation*}
+
+    By definition,
+    \begin{equation*}
+      f^\star(x) = \sup_{y}\left\{\left\langle x, y \right\rangle - f(y)\right\}.           
+    \end{equation*}
+    If $y \not\in \mathbb{B}_{\infty}$, then
+    $\left\langle x, y \right\rangle - f(y) = -\infty$ for all $x$. For
+    $y \in \mathbb{B}_{\infty}$,
+    $\left\langle x, y \right\rangle - f(y) = \left\langle x, y \right\rangle$,
+    so to maximize $\left\langle x, y \right\rangle - f(y)$, we should choose
+    $y$ such that $\left\langle x, y \right\rangle$ is maximized.
+  \end{proof}
 \item $f(x) = \delta_{\mathbb{B}_{2}}(x)$.
+  \begin{proof}
+    We have that
+    \begin{equation*}
+      \boxed{
+        f^\star(x) =
+        \delta^\star_{\mathbb{B}_{2}}(x)
+        = \max_{y \in \mathbb{B}_{2}} \left\langle x, y \right\rangle.}
+    \end{equation*}
+    
+    The proof is identical to the previous one with $\mathbb{B}_{\infty}$
+    replaced by $\mathbb{B}_2$.
+  \end{proof}
 \item $f(x) = \exp(x)$.
+  \begin{proof}
+    We have that
+    \begin{equation*}
+      \boxed{f^\star(x) =
+        \begin{cases}
+          x\log x - x = x\left(\log x - 1\right), &x > 0; \\
+          0, &x = 0; \\
+          \infty, &x < 0.
+        \end{cases}}
+    \end{equation*}
+
+    To see this, we can maximize
+    $\left\langle x, y \right\rangle - \exp\left(y\right)$ with respect to $y$
+    by taking the derivative, setting it to $0$, and solving for $y$. In doing
+    so, we find that $y = \log x$, which is only defined when $x > 0$. When
+    $x \leq 0$, we see that we can maximize $xy - \exp\left(y\right)$ by sending
+    $y$ to $-\infty$.
+  \end{proof}
 \item $f(x) =  \log(1+\exp(x))$
+  \begin{proof}
+    We have that
+    \begin{equation*}
+      \boxed{f^\star(x) =
+        \begin{cases}
+          \infty, &x > 1; \\
+          0, &x = 1; \\
+          x\left(\log x - \log\left(1 - x\right)\right)  + \log\left(1 - x\right), & 0 < x < 1; \\
+          0, & x = 0; \\
+          \infty, &x < 0.
+        \end{cases}}
+    \end{equation*}
+
+    Consider $xy - \log(1+\exp(y))$. The derivative with respect to $y$ is
+    $x - \frac{\exp(y)}{1+\exp(y)}$. When $x \in \left(0, 1\right)$, we can
+    solve for $y = \log\left(\frac{x}{1 - x}\right)$. When $x \geq 1$, the
+    derivative is always positive, so we have that the max is obtained when
+    $y \rightarrow \infty$. We note that
+    \begin{equation*}
+      xy - \log(1+\exp(y)) = xy - \left[
+        y + \exp(-y) - \frac{\exp(-2y)}{2} + \frac{\exp(-3y)}{3} - \frac{\exp(-4y)}{4} + \cdots
+      \right]
+    \end{equation*}
+    by a Taylor series expansion, so as $y \rightarrow \infty$, we have $\infty$
+    if $x > 1$ and $0$ if $x = 1$.
+
+    When $x \leq 0$, the derivative is always negative, so we maximize the
+    expression with $y \rightarrow -\infty$. When $x = 0$, only the second term
+    remains, so we have $0$. If $x < 0$, we have that the first term tends to
+    $\infty$ and the second term tends to $0$.        
+  \end{proof}
 \item $f(x) = x\log(x)$
 \end{enumerate}
 
