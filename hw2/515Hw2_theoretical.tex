@@ -254,8 +254,9 @@ Write down the formula for $\prox_{t g}$ and $g_t$.
     This is differentiable, so we can just take the derivative, set it to $0$,
     and solve for $x$. This yields
     \begin{equation*}
-      \prox_{t f}(y) = \frac{1}{1 + tC}y.
+      \prox_{t f}(y) = \left(tC^TC + I\right)^{-1}y,
     \end{equation*}
+    which is well defined since $tC^TC + I$ is always invertible.
   \end{proof}
   
 \item Let $f(x) = \|x\|_2$. Write $\prox_{tf}(y)$ in closed form.
