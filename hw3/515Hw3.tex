@@ -91,7 +91,7 @@
         \begin{cases}
           \infty, &x > 1; \\
           0, &x = 1; \\
-          x\left(\log x - \log\left(1 - x\right)\right)  + \log\left(1 - x\right), & 0 < x < 1; \\
+          x\log x + \left(1 - x\right)\log\left(1 - x\right), & 0 < x < 1; \\
           0, & x = 0; \\
           \infty, &x < 0.
         \end{cases}}
@@ -162,7 +162,7 @@ Compute $f^\star$ in terms of $g^\star$.
     
     \begin{align*}
       f^\star\left(x\right)
-      &= \sup_{y} \left\{\left\langle x, y \right\rangle - f(x)\right\} \\
+      &= \sup_{y} \left\{\left\langle x, y \right\rangle - f(y)\right\} \\
       &= \sup_{y} \left\{\left\langle x, y \right\rangle - g(y - a)\right\} \\
       &= \sup_{y} \left\{\left\langle x, y \right\rangle -
         \left\langle y, b \right\rangle - g(y - a)\right\} \\
@@ -389,16 +389,102 @@ Where $g$ is convex and $R$ is any regularizer.
 \[
 p(u) = \min_{x} \sum_{i=1}^n g(\langle a_i, x\rangle + u_i) - b^TAx + R(x).
 \]
-\bigskip\bigskip
+
+\begin{proof}
+  Let
+  \begin{equation*}    
+    f_x\left(u\right) = \sum_{i=1}^n g(\langle a_i, x\rangle + u_i) - b^TAx + R(x).
+  \end{equation*}
+
+  By Problem (2)(c),
+  \begin{align*}        
+    p^\star\left(u\right)
+    &= \sup_x\left\{f_x^\star\left(u\right)\right\}.
+  \end{align*}
+
+  By Problem (2)(b),
+  \begin{align*}
+    f_x^\star\left(v\right)
+    &= \sup_u\left\{
+      \left\langle v, u\right\rangle
+      - \left[\sum_{i=1}^n g(\langle a_i, x\rangle + u_i) - b^TAx + R(x)\right]\right\} \\
+    &= \sup_u\left\{
+      \sum_{i=1}^n \left[v_iu_i - g(\langle a_i, x\rangle + u_i)\right] +
+      \left[b^TAx - R(x)\right]
+      \right\} \\
+    &= b^TAx - R(x) + \sup_u\left\{
+      \sum_{i=1}^n \left[v_iu_i - g(\langle a_i, x\rangle + u_i)\right]\right\} \\
+    &= b^TAx - R(x) + 
+      \sum_{i=1}^n \sup_{u_i}\left\{v_iu_i - g(\langle a_i, x\rangle + u_i)\right\} \\
+    &=  b^TAx - R(x) + \sum_{i=1}^n\left[
+      g^\star\left(v_i\right) -v_i\langle a_i, x\rangle \right] \\
+    &=  b^TAx - R(x) - v^TAx
+      + \sum_{i=1}^ng^\star\left(v_i\right).
+  \end{align*}
+
+  Thus, we have that
+  \begin{align*}
+    p^\star\left(u\right)
+    &= \sup_x \left\{b^TAx - R(x) - u^TAx + \sum_{i=1}^ng^\star\left(u_i\right)\right\} \\
+    &= \sum_{i=1}^ng^\star\left(u_i\right) + \sup_x \left\{\left(b - u\right)^TAx - R(x)\right\} \\
+    &= \sum_{i=1}^ng^\star\left(u_i\right) + R^\star\left(A^T\left(b - u\right)\right).
+  \end{align*}
+\end{proof}
+
 \item Specify your formula to Ridge-regularized logistic regression: 
 \[
 \min_x \sum_{i=1}^n \log(1+\exp(\langle a_i, x \rangle))  - b^TAx  + \frac{\lambda}{2}\|x\|^2. 
 \]
-\bigskip\bigskip
+
+\begin{proof}
+  Using the results in from Problem (1)(d) and Problem (2)(a), we have that
+  \begin{align*}
+    g(x) = \log(1 + \exp\left(x\right))
+    &\Rightarrow
+      g^\star(x) = \begin{cases}
+        \infty, &|2x - 1| > 1; \\
+        0, &|2x - 1| = 1; \\
+        x\log x + \left(1 - x\right) \log\left(1 - x\right), &\text{otherwise};
+      \end{cases}
+    \\
+    R(x) = \frac{\lambda}{2}\|x\|^2
+    &\Rightarrow R^\star(x) = \frac{1}{2\lambda}\|x\|^2 \\
+  \end{align*}
+
+  We can substitute to get
+  \begin{equation*}
+    p(u) = \sum_{i=1}^ng^\star\left(u_i\right) + \frac{1}{2\lambda}\|A^T\left(b - u\right)\|^2.
+  \end{equation*}
+\end{proof}
+
 \item Specify your formula to 1-norm regularized Poisson regression: 
 \[
 \min_x \sum_{i=1}^n \exp(\langle a_i, x \rangle) - b^TAx +  \lambda\|x\|_1. 
 \]
+\begin{proof}
+  Using the results in from Problem (1)(c), Problem (2)(a), and Problem (3)(b), we have that
+  \begin{align*}
+    g(x) = \exp(x)
+    &\Rightarrow
+      g^\star(x) = \begin{cases}
+        \infty, &x < 0; \\
+        0, &x = 0; \\
+        x\left(\log x - 1\right), &\text{otherwise};
+      \end{cases}
+    \\
+    R(x) = \lambda\|x\|_1 &\Rightarrow R^\star(x) = \begin{cases}
+      \infty, &\text{if any $\left|x_i\right| > \lambda$}; \\
+      0, &\text{otherwise.}
+    \end{cases}
+  \end{align*}
+
+  We can substitute to get
+  \begin{equation*}
+    p(u) = \sum_{i=1}^ng^\star\left(u_i\right) + R^\star\left(A^T\left(b - u\right)\right).
+  \end{equation*}
+\end{proof}
+
+
 \end{enumerate}
 \bigskip \bigskip
 \end{enumerate}
@@ -422,13 +508,14 @@ The projection problem is given by
 \]
 \begin{enumerate}
 \item Derive the (1-dimensional) dual problem by focusing on the $1^Tx = k$ constraint. 
-\bigskip \bigskip
+  \begin{proof}
+  \end{proof}
 \item Implement a routine to solve this dual. It's a scalar root finding problem, 
 so you can use the root-finding algorithm provided in the code.  
 \bigskip \bigskip
 \item Using the dual solution, write down a closed form formula for the projection.  
 Use this formula, along with your dual solver, to implement the projection. You can use the unit test 
-provided to check if your code id working correctly. 
+provided to check if your code is working correctly. 
 
 
 \end{enumerate}
