@@ -113,9 +113,19 @@
     When $x \leq 0$, the derivative is always negative, so we maximize the
     expression with $y \rightarrow -\infty$. When $x = 0$, only the second term
     remains, so we have $0$. If $x < 0$, we have that the first term tends to
-    $\infty$ and the second term tends to $0$.        
+    $\infty$ and the second term tends to $0$.
   \end{proof}
 \item $f(x) = x\log(x)$
+  \begin{proof}
+    We have that
+    \begin{equation*}
+      \boxed{f^\star(x) = \exp\left(x - 1\right).}
+    \end{equation*}
+
+    We can take the derivative of $xy - y\log y$ with respect to $y$, set this
+    equal to $0$, and solve for $y$. We find that $y = \exp\left(x -
+      1\right)$. Substituting, we obtained the desired result.
+  \end{proof}
 \end{enumerate}
 
 
@@ -124,12 +134,90 @@
 
 
 \item  Let $g$ be any convex function; $f$ is formed using $g$.
-Compute $f^*$ in terms of $g^*$.  
+Compute $f^\star$ in terms of $g^\star$.  
 \begin{enumerate}
 \item $f(x) = \lambda g(x)$.
+  \begin{proof}
+    \begin{equation*}
+      \boxed{f^\star\left(x\right)
+      = \lambda g^\star\left(\frac{x}{\lambda}\right)}
+    \end{equation*}
+
+    To see this,
+    \begin{align*}
+      f^\star\left(x\right)
+      &= \sup_{y} \left\{\left\langle x, y \right\rangle - f(y)\right\} \\
+      &= \sup_{y} \left\{\left\langle x, y \right\rangle - \lambda g(y)\right\} \\
+      &= \lambda \sup_{y}
+        \left\{\left\langle \frac{x}{\lambda}, y \right\rangle - g(y)\right\} \\
+      &= \lambda g^\star\left(\frac{x}{\lambda}\right).
+    \end{align*}
+  \end{proof}
 \item $f(x) = g(x-a) + \langle x, b \rangle$.
-\item $f(x) = \inf_z \left\{g(x,z)\right\}$. 
+  \begin{proof}
+    \begin{equation*}
+      \boxed{f^\star\left(x\right)
+        = \left\langle x - b, a \right\rangle + g^\star\left(x - b\right)}
+    \end{equation*}
+    
+    \begin{align*}
+      f^\star\left(x\right)
+      &= \sup_{y} \left\{\left\langle x, y \right\rangle - f(x)\right\} \\
+      &= \sup_{y} \left\{\left\langle x, y \right\rangle - g(y - a)\right\} \\
+      &= \sup_{y} \left\{\left\langle x, y \right\rangle -
+        \left\langle y, b \right\rangle - g(y - a)\right\} \\
+      &= \sup_{y} \left\{\left\langle x - b, y \right\rangle - g(y - a)\right\} \\
+      &= \sup_{y} \left\{
+        \left\langle x - b, a \right\rangle + 
+        \left\langle x - b, y - a \right\rangle - g(y - a)\right\} \\
+      &= \left\langle x - b, a \right\rangle + \sup_{y} \left\{
+        \left\langle x - b, y - a \right\rangle - g(y - a)\right\} \\
+      &= \left\langle x - b, a \right\rangle + g^\star(x - b)
+    \end{align*}
+    since shiftfing by $a$ does not change the supremum.
+  \end{proof}
+\item $f(x) = \inf_z \left\{g(x,z)\right\}$.
+  \begin{proof}
+    Rewrite $g(x,z) = g_z(x)$ to emphasize that we're conjugating on the $x$
+    argument. Then, we have that
+    \begin{equation*}
+      \boxed{f^\star\left(x\right) = \sup_z g_z^\star(x).}
+    \end{equation*}
+
+    Since
+    \begin{equation*}
+      \sup_{y} \left\{\left\langle x, y \right\rangle - \inf_zg(y, z)\right\}
+      \geq
+      \sup_{y} \left\{\left\langle x, y \right\rangle - g(y, z)\right\}
+    \end{equation*}
+    for all $z$, and we can choose $z$ so that the right-hand size is
+    arbitrarily close to the left-hand size, we have that
+    \begin{equation*}
+      f^\star\left(x\right)
+      = \sup_{y} \left\{\left\langle x, y \right\rangle - \inf_zg(y, z)\right\}
+      = \sup_z\sup_{y} \left\{\left\langle x, y \right\rangle - g(y, z)\right\}.
+    \end{equation*}
+
+    Since
+    $g^\star_z(x) = \sup_{y} \left\{\left\langle x, y \right\rangle - g(y,
+      z)\right\}$, we have our desired result.        
+  \end{proof}
 \item $f(x) = \inf_z \left\{\frac{1}{2}\|x-z\|^2 + g(z)\right\}$
+  \begin{proof}
+    Let $h_z(x) = \frac{1}{2}\|x-z\|^2 + g(z)$.
+
+
+    Noting that the conjugate of $\|x\|^2/2$ is itself, we can apply part (b) to
+    obtain
+    $h_z^\star(x) = \frac{1}{2}\|x\|^2 + \left\langle x, z\right\rangle - g(z)$.
+
+    Applying the results of part (c), we have that
+    \begin{equation*}
+      f^\star\left(x\right)
+      = \sup_z \left\{\frac{1}{2}\|x\|^2 + \left\langle x, z\right\rangle - g(z)\right\}
+      = \boxed{\frac{1}{2}\|x\|^2 + g^\star(x).}
+    \end{equation*}    
+  \end{proof}
 \end{enumerate}
 
 \bigskip\bigskip
@@ -138,26 +226,115 @@ Compute $f^*$ in terms of $g^*$.
 \begin{enumerate}
 \item  Derive the Moreau Identity: 
 \[
-\mbox{prox}_{f}(z) + \mbox{prox}_{f^*}(z) = z. 
+\mbox{prox}_{f}(z) + \mbox{prox}_{f^\star}(z) = z. 
 \]
-You may find the `Fenchel flip' useful. 
 
-\bigskip \bigskip
+\begin{proof}
+  It follows from Corollary 4.41 of the text:
+  \begin{equation*}
+    y \in \partial f (x) \Leftrightarrow x \in \partial f^\star(y).
+  \end{equation*}
 
+  We also use Proposition 4.39 to note that
+  \begin{align*}
+    \operatorname{prox}_{f}(z) = \arg\min_x f(x) + \frac{1}{2}\left\|x - z\right\|^2
+    &\Leftrightarrow 0 \in \partial \left(
+      f\left(\operatorname{prox}_{f}(z)\right) + \frac{1}{2}\left\|\operatorname{prox}_{f}(z) - z\right\|^2\right) \\
+    &\Leftrightarrow
+      z - \operatorname{prox}_{f}(z) \in \partial f\left(\operatorname{prox}_{f}(z)\right).
+  \end{align*}
+  
+  So we use these two facts to find that
+  \begin{align*}
+    z - \mbox {prox}_{f}(z) \in \partial f \left(\mbox{prox}_{f}(z)\right)
+    &\Leftrightarrow \mbox{prox}_{f}(z) \in \partial f^\star
+      \left(z - \mbox {prox}_{f}(z)\right)\\
+    &\Leftrightarrow
+      z - \left(z - \mbox{prox}_{f}(z)\right) \in \partial f^\star
+      \left(z - \mbox{prox}_{f}(z)\right) \\
+    &\Leftrightarrow
+      \mbox{prox}_{f^\star}(z) = z - \mbox{prox}_{f}(z) \\
+    &\Leftrightarrow z = \mbox{prox}_{f}(z) + \mbox{prox}_{f^\star}(z),
+  \end{align*}
+  which is our desired result.
+  
+\end{proof}
 %\item Take a look at this more detailed identity:  
 %\[
 %\mbox{prox}_{\alpha f}(z) = z - \alpha \mbox{prox}_{\frac{1}{\alpha}f^*}(z/\alpha).
 %\]
 %Don't prove this, but please remember it --- its very useful for coding. 
 
-\bigskip \bigskip
 
-\item Use either of the Moreau identities and 
-1a, 1b to check your formulas for 
+\item Use either of the Moreau identities and 1a, 1b to check your formulas for
 \[
 \mbox{prox}_{\|\cdot\|_1}, \quad \mbox{prox}_{\|\cdot\|_2}
 \]
-from last week's homework. 
+from last week's homework.
+
+\begin{proof}
+  For $\mbox{prox}_{\|\cdot\|_1}$, we note that
+  \begin{align*}
+    \left(\|x\|_1\right)^\star
+    &= \sup_y \left\{\left\langle x, y \right\rangle - |y|_1\right\} \\
+    &= \sup_y \left\{\sum_i x_iy_i - |y_i|\right\} \\
+    &= \begin{cases}
+      \infty, &\text{if any $\left|x_i\right| > 1$}; \\
+      0, &\text{otherwise.}
+    \end{cases}
+  \end{align*}
+
+  Thus, the proximal operator is
+  \begin{align*}
+    \mbox{prox}_{\left(\|\cdot\|_1\right)^\star}\left(x\right)
+    &= \arg\min_y\frac{1}{2}\left\|y - x\right\|^2 + \left(\|y\|_1\right)^\star \\
+    &= \min(\left|x\right|, 1)\operatorname{sign}\left(x\right),
+  \end{align*}
+  where I have abused notation and all operations are done element-wise.
+  
+
+  Then, applying the Moreau identity, we obtain
+  \begin{align*}
+    \mbox{prox}_{\|\cdot\|_1} (x)
+    &= x - \mbox{prox}_{\left(\|\cdot\|_1\right)^\star} (x) \\
+    &= x - \min(\left|x\right|, 1)\operatorname{sign}\left(x\right) \\
+    &= \operatorname{sign}\left(x\right)\max\left(\left|x\right| - 1, 0\right),
+  \end{align*}
+  which agrees with my previous result.
+  
+  We have that
+  \begin{align*}
+    \left(\|x\|_2\right)^\star
+    &= \sup_y \left\{\left\langle x, y\right\rangle - \|\ y \|_2\right\} \\
+    &\geq \|\ x \|_2 \|\ y \|_2 - \|\ y \|_2 \\
+    &\geq \|\ y \|_2\left(\|\ x \|_2  - 1\right),
+  \end{align*}
+  where we have equality if we choose $y$ in the same direction as $x$. Thus,
+  we'll have that $\left(\|x\|_2\right)^* = \infty$ if $\|\ x \|_2 > 1$ and
+  $\left(\|x\|_2\right)^* = 0$ if $\|\ x \|_2 \leq 1$.
+
+  Then, we have that
+  \begin{align*}
+    \mbox{prox}_{\left(\|\cdot\|_2\right)^\star} (x)
+    &= \arg\min_y\frac{1}{2}\left\|y - x\right\|^2 + \left(\|y\|_2\right)^\star \\
+    &= \begin{cases}
+      x, &\|x\|_2 \leq 1; \\
+      \frac{x}{\|x\|_2}, &\|x\|_2 > 1.
+    \end{cases}
+  \end{align*}
+  
+  Then, applying the Moreau identity, we obtain
+  \begin{align*}
+    \mbox{prox}_{\|\cdot\|_2} (x)
+    &= x - \mbox{prox}_{\left(\|\cdot\|_2\right)^\star} (x) \\
+    &= \begin{cases}
+      0, &\|x\|_2 \leq 1; \\
+      x\left(1 - \frac{1}{\|x\|_2}\right), &\|x\|_2 > 1.
+    \end{cases}
+  \end{align*}
+  This agrees with my previous result for $\mbox{prox}_{\|\cdot\|_2}$.
+  
+\end{proof}
 \end{enumerate}
 
 
