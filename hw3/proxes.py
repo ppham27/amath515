@@ -2,12 +2,9 @@
 import numpy as np
 from scipy.optimize import bisect
 
-# =============================================================================
-# TODO: Put your name and UW ID here (for homework grading purposes)
-# =============================================================================
-UW_ID = ""
-FIRST_NAME = ""
-LAST_NAME = ""
+UW_ID = "1772371"
+FIRST_NAME = "Philip"
+LAST_NAME = "Pham"
 
 # =============================================================================
 # TODO Complete the following prox for simplex
@@ -16,28 +13,28 @@ LAST_NAME = ""
 # Prox of capped simplex
 # -----------------------------------------------------------------------------
 def prox_csimplex(z, k):
-	"""
-	Prox of capped simplex
-		argmin_x 1/2||x - z||^2 s.t. x in k-capped-simplex.
+  """Prox of capped simplex argmin_x 1/2||x - z||^2 s.t. x in k-capped-simplex.
 
-	input
-	-----
-	z : arraylike
-		reference point
-	k : int
-		positive number between 0 and z.size, denote simplex cap
+  Args:
+    z: arraylike, reference point
+    k: int, positive number between 0 and z.size, denote simplex cap
 
-	output
-	------
-	x : arraylike
-		projection of z onto the k-capped simplex
-	"""
-	# safe guard for k
-	assert 0<=k<=z.size, 'k: k must be between 0 and dimension of the input.'
-
-	# TODO do the computation here
-	# Hint: 1. construct the scalar dual object and use `bisect` to solve it.
-	#		2. obtain primal variable from optimal dual solution and return it.
-	#
-	return None
-
+  Returns:
+    arraylike, projection of z onto the k-capped simplex
+  """
+  # safe guard for k
+  if k < 0 or k > z.size:
+    raise ValueError(
+      'k: k must be between 0 and dimension of the input. k = {}'.format(k))
+  # 1. Construct the scalar dual object.
+  def f(y):
+    return np.sum(np.clip(z - y, 0, 1)) - k
+  # 2. Use `bisect` to solve it.
+  lower_bound, upper_bound = -1., 1.
+  while f(lower_bound) <= 0:
+    lower_bound *= 2
+  while f(upper_bound) >= 0:
+    upper_bound *= 2
+  y = bisect(f, lower_bound, upper_bound)
+  # 3. Obtain primal variable from optimal dual solution and return it.
+  return np.clip(z - y, 0, 1)

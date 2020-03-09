@@ -37,7 +37,8 @@
       \boxed{
         f^\star(x) =
         \delta^\star_{\mathbb{B}_{\infty}}(x)
-        = \max_{y \in \mathbb{B}_{\infty}} \left\langle x, y \right\rangle.}
+        = \max_{y \in \mathbb{B}_{\infty}} \left\langle x, y \right\rangle
+        = \sum_i \left|x_i\right|.}
     \end{equation*}
 
     By definition,
@@ -58,7 +59,8 @@
       \boxed{
         f^\star(x) =
         \delta^\star_{\mathbb{B}_{2}}(x)
-        = \max_{y \in \mathbb{B}_{2}} \left\langle x, y \right\rangle.}
+        = \max_{y \in \mathbb{B}_{2}} \left\langle x, y \right\rangle
+        = \left\|x\right\|_2.}      
     \end{equation*}
     
     The proof is identical to the previous one with $\mathbb{B}_{\infty}$
@@ -511,7 +513,7 @@ The projection problem is given by
   \begin{proof}
   \end{proof}
 \item Implement a routine to solve this dual. It's a scalar root finding problem, 
-so you can use the root-finding algorithm provided in the code.  
+so you can use the root-finding algorithm provided in the code.
 \bigskip \bigskip
 \item Using the dual solution, write down a closed form formula for the projection.  
 Use this formula, along with your dual solver, to implement the projection. You can use the unit test 
