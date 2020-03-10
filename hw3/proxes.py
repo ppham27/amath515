@@ -1,14 +1,10 @@
-# this file contains collections of proxes we learned in the class
+"""Implementation of `prox_csimplex`."""
 import numpy as np
 from scipy.optimize import bisect
 
-UW_ID = "1772371"
-FIRST_NAME = "Philip"
-LAST_NAME = "Pham"
-
-# =============================================================================
-# TODO Complete the following prox for simplex
-# =============================================================================
+UW_ID = '1772371'
+FIRST_NAME = 'Philip'
+LAST_NAME = 'Pham'
 
 # Prox of capped simplex
 # -----------------------------------------------------------------------------
@@ -17,7 +13,7 @@ def prox_csimplex(z, k):
 
   Args:
     z: arraylike, reference point
-    k: int, positive number between 0 and z.size, denote simplex cap
+    k: float, positive number between 0 and z.size, denote simplex cap
 
   Returns:
     arraylike, projection of z onto the k-capped simplex
@@ -31,7 +27,7 @@ def prox_csimplex(z, k):
     return np.sum(np.clip(z - y, 0, 1)) - k
   # 2. Use `bisect` to solve it.
   lower_bound, upper_bound = -1., 1.
-  while f(lower_bound) <= 0:
+  while f(lower_bound) < 0:
     lower_bound *= 2
   while f(upper_bound) >= 0:
     upper_bound *= 2

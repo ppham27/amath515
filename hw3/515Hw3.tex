@@ -1,4 +1,5 @@
 \documentclass[11pt]{amsart}
+\usepackage{hyperref}
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
 \geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
 %\geometry{landscape}                % Activate for for rotated page geometry
@@ -8,6 +9,7 @@
 \usepackage[all]{xy}
 \usepackage{epstopdf}
 \usepackage{color}
+\usepackage[cache=false]{minted}
 \DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
 
 
@@ -500,7 +502,7 @@ Please download \texttt{515Hw3\_Coding.ipynb} and \texttt{proxes.py} to complete
 
 The Capped Simplex $\Delta_k$ is defined as follows: 
 \[
-\Delta_k := \left\{x: 1^Tx = k, \quad 0 \leq x_i \leq 1 \quad \forall i. \right\}
+\Delta_k := \left\{x: \mathbf{1}^Tx = k, \quad 0 \leq x_i \leq 1 \quad \forall i. \right\}
 \]
 This is the intersection of the $k$-simplex with the unit box. 
 
@@ -509,23 +511,118 @@ The projection problem is given by
 \mbox{proj}_{\Delta_k}(z) = \arg\min_{x \in \Delta_k} \frac{1}{2}\|x-z\|^2.
 \]
 \begin{enumerate}
-\item Derive the (1-dimensional) dual problem by focusing on the $1^Tx = k$ constraint. 
+\item Derive the (1-dimensional) dual problem by focusing on the $\mathbf{1}^Tx = k$ constraint. 
   \begin{proof}
+    We can rewrite the the problem as
+    \begin{align*}
+      \mbox{proj}_{\Delta_k}(z)
+      &= \arg\min_{x \in \Delta_k} \frac{1}{2}\|x-z\|^2 \\
+      &= \arg\min_{x \in \mathbb{R}^n} \frac{1}{2}\|x-z\|^2 + \delta_{\{0\}}\left(\mathbf{1}^Tx - k \right) +
+        \delta_{[0,1]^n}\left(x \right) \\
+      &= \arg\min_{x \in \mathbb{R}^n} \frac{1}{2}\|x-z\|^2 +
+        \sup_{\lambda \in \mathbb{R}}\left\{\lambda\left(\mathbf{1}^Tx - k \right)\right\} +
+        \delta_{[0,1]^n}\left(x \right) \\
+      &= \arg\min_{x \in \mathbb{R}^n} \sup_{\lambda \in \mathbb{R}}\left\{
+        \frac{1}{2}\|x-z\|^2 +
+        \lambda\left(\mathbf{1}^Tx - k \right) +
+        \delta_{[0,1]^n}\left(x \right)
+        \right\}.
+    \end{align*}
+
+    If $k \in \left(0, n\right]$, we can apply Slater's condition since there is
+    guaranteed to be an $x$ such that $x \in [0, 1]^n$ and $\mathbf{1}^Tx =
+    k$. Thus, we have strong duality, and
+    \begin{align*}
+      \min_{x \in \mathbb{R}^n} \sup_{\lambda \in \mathbb{R}}\left\{
+        \frac{1}{2}\|x-z\|^2 +
+        \lambda\left(\mathbf{1}^Tx - k \right) +
+        \delta_{[0,1]^n}\left(x \right)
+      \right\} = \\
+      \boxed{\sup_{\lambda \in \mathbb{R}}\min_{x \in \mathbb{R}^n}
+                \frac{1}{2}\|x-z\|^2 +
+        \lambda\left(\mathbf{1}^Tx - k \right) +
+      \delta_{[0,1]^n}\left(x\right).}
+    \end{align*}        
   \end{proof}
 \item Implement a routine to solve this dual. It's a scalar root finding problem, 
-so you can use the root-finding algorithm provided in the code.
-\bigskip \bigskip
+  so you can use the root-finding algorithm provided in the code.
+
+  \begin{proof}
+    Suppose we fix $\lambda$. The inner minimization problem is solved by
+    $\mbox{prox}_{g + h}(z)$, where $g(x) = \lambda\mathbf{1}^Tx - \lambda k$
+    and $h\left(x\right) = \delta_{[0,1]^n}\left(x\right)$. Since $g$ is affine,
+    we can apply Theorem 3 of Yu's
+    \href{http://papers.neurips.cc/paper/4863-on-decomposing-the-proximal-map}{\emph{On
+        Decomposing the Proximal Map}} to obtain
+    \begin{align*}
+      \mbox{prox}_{g + h}(z)
+      &= \mbox{prox}_{h}\left(\mbox{prox}_{g}(z)\right) \\
+      &= \mbox{prox}_{h}\left(x - \lambda\mathbf{1}\right) \\
+      &= \min\left(\left(x - \lambda\mathbf{1}\right)_+, \mathbf{1}\right),
+    \end{align*}
+    where $\left(\cdot\right)_+ = \max\left(\cdot, 0\right)$, and the $\min$ and
+    $\left(\cdot\right)_+$ operation are taken to be element-wise.
+
+    Denote
+    $x_\lambda = \min\left(\left(x - \lambda\mathbf{1}\right)_+,
+      \mathbf{1}\right)$. With this notation, we have that
+    \begin{align*}
+      \sup_{\lambda \in \mathbb{R}}\min_{x \in \mathbb{R}^n}
+      \frac{1}{2}\|x-z\|^2 +
+      \lambda\left(\mathbf{1}^Tx - k \right) +
+      \delta_{[0,1]^n}\left(x\right)
+      &= \sup_{\lambda \in \mathbb{R}}
+        \frac{1}{2}\|x_\lambda-z\|^2 +
+        \lambda\left(\mathbf{1}^Tx_\lambda - k \right),
+    \end{align*}
+    where the last term falls away since $x_\lambda$ is always in the unit
+    box. By duality, the solution must occur when
+    $\mathbf{1}^Tx_\lambda - k = 0$, so we need to solve for $\lambda$ such that
+    \begin{equation*}
+      \mathbf{1}^T\min\left(\left(z - \lambda\mathbf{1}\right)_+, \mathbf{1}\right) - k = 0.
+    \end{equation*}
+    The first term is monotonically decreasing as a function of $\lambda$, so we
+    can use bisection to solve for $\lambda$. See \texttt{prox\_csimplex} in
+    Listing \ref{lst:prox_csimplex} for a Python implementation.
+    
+    \begin{listing}
+      \small
+      \inputminted{python}{proxes.py}
+      \caption{An implementation of Equation \ref{eqn:prox_csimplex} in the \texttt{proxes.py} file.}
+      \label{lst:prox_csimplex}
+    \end{listing}
+  \end{proof}
+  
 \item Using the dual solution, write down a closed form formula for the projection.  
 Use this formula, along with your dual solver, to implement the projection. You can use the unit test 
-provided to check if your code is working correctly. 
+provided to check if your code is working correctly.
 
+\begin{proof}
+  \begin{align}
+    \mbox{proj}_{\Delta_k}(z)
+    &= \min\left(\left(z - \lambda\mathbf{1}\right)_+, \mathbf{1}\right),
+      \label{eqn:prox_csimplex} \\
+    \text{where $\lambda$ satisfies}~
+    0 &= \mathbf{1}^T\min\left(\left(z - \lambda\mathbf{1}\right)_+, \mathbf{1}\right) - k,
+    \nonumber
+  \end{align}
+  where the $\min$ and $\left(\cdot\right)_+$ operation are taken to be
+  element-wise.
+  
+  See Figure \ref{fig:prox_csimplex} for an example of this algorithm.
+  \begin{figure}
+    \centering
+    \includegraphics{prox_csimplex.pdf}
+    \caption{Projection of 5 randomly-generated points using Equation \ref{eqn:prox_csimplex}.}
+    \label{fig:prox_csimplex}
+  \end{figure}
+\end{proof}
 
 \end{enumerate}
 
-
-
-
 \end{enumerate}
 
-
-\end{document}  
+\end{document}
+%%% Local Variables:
+%%% TeX-command-extra-options: "-shell-escape"
+%%% End:

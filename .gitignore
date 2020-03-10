@@ -137,3 +137,4 @@ dmypy.json
 *.aux
 *.out
 _region_.tex
+_minted-*
