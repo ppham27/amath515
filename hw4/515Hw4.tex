@@ -1,0 +1,140 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage[all]{xy}
+\usepackage{epstopdf}
+\usepackage{color}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+
+% these packages make it easy to include figures in the text. 
+\usepackage{float}
+\restylefloat{figure}
+% newcommand
+\newcommand{\ip}[1]{\left\langle #1\right\rangle}
+
+
+
+\begin{document}
+{\Large Name: Philip Pham}  \\
+\begin{center}
+\Large AMATH 515 \hskip 2in Homework Set 4\\
+{\bf Due: Wednesday, March 18th, on Canvas}. 
+\end{center}
+\bigskip
+\begin{enumerate}
+
+\item  Prove the following identity for $\alpha \in \mathbb{R}$:
+\[
+\|\alpha x + (1-\alpha) y\|^2 + \alpha(1-\alpha) \|x-y\|^2 = \alpha \|x\|^2 + (1-\alpha) \|y\|^2.
+\]
+
+\begin{proof}
+  This follows from the fact that
+  $\| u - v \|^2 = \langle u, u \rangle + \langle v, v \rangle -
+  2\langle u, v \rangle$.
+
+  With some algebra,
+  \begin{align*}
+    \|\alpha x + (1-\alpha) y\|^2 + \alpha(1-\alpha) \|x-y\|^2
+    &= \alpha^2 \langle x, x \rangle + (1-\alpha)^2 \langle y, y \rangle
+      + 2\alpha(1-\alpha)\langle x, y \rangle \\
+    & + \alpha(1-\alpha)\langle x, x \rangle + \alpha(1-\alpha)\langle y, y \rangle
+      -2\alpha(1-\alpha)\langle x, y \rangle\\
+    &= \alpha \langle x, x \rangle + (1-\alpha)\left[1 - \alpha + \alpha\right]\langle y, y \rangle \\
+    &=\alpha \|x\|^2 + (1-\alpha) \|y\|^2.
+  \end{align*}
+\end{proof}
+
+
+\item An operator $T$ is {\it nonexpansive} if  $\|Tx - Ty\| \leq \|x - y\|$ for all $(x,y)$. 
+For any such nonexpansive operator $T$, define 
+\[
+T_\lambda = (1-\lambda)I + \lambda T. 
+\]
+\begin{enumerate}
+\item Show that $T_\lambda$ and $T$ have the same fixed points. 
+\item Use problem 1 to show 
+\[
+\|T_\lambda z - \overline z\|^2 \leq \|z-\overline z\|^2 - \lambda(1-\lambda) \|z - Tz\|^2.
+\]
+where $\overline z$ is any fixed point of $T$, i.e. $T\overline z = \overline z$.
+
+\end{enumerate}
+
+\bigskip\bigskip\bigskip
+
+\item An operator $T$ is {\it firmly nonexpansive} when it satisfies 
+\[
+\|Tx - Ty\|^2 + \|(I-T) x - (I-T)y\|^2 \leq \|x-y\|^2. 
+\]
+
+
+\begin{enumerate}
+\item Show $T$ is firmly nonexpansive if and only if 
+\[
+\langle x-y, Tx - Ty \rangle \geq \|Tx - Ty\|^2. 
+\]
+\item Show $T$ is firmly nonexpansive if and only if 
+\[
+\langle Tx - Ty, (I-T)x - (I-T)y \rangle \geq 0. 
+\]
+
+
+\item Suppose that $S = 2T - I$. Let 
+\[
+\mu = \|Tx - Ty\|^2 + \|(I-T)x - (I-T)y\|^2 - \|x-y\|^2
+\]
+and let 
+\[
+\nu = \|Sx - Sy\|^2 - \|x-y\|^2.
+\]
+Show that $2\mu = \nu$ (you may find it helpful to use problem (1)). Conclude that 
+$T$ is firmly nonexpansive exactly when $S$ is nonexpansive. 
+
+\end{enumerate}
+
+\end{enumerate}
+\newpage
+\noindent{\bf Coding Assignment}
+\vskip 8pt \noindent
+Please download \texttt{515Hw4\_Coding.ipynb} and \texttt{solvers.py} to complete problem (4) and (5).
+\vskip 8pt
+
+\begin{enumerate}
+
+\item[(4)] Implement an interior point method to solve the problem 
+\[
+\min_x \frac{1}{2}\|Ax-b\|^2 \quad \mbox{s.t.} \quad Cx \leq d. 
+\]
+Let the user input $A$, $b$, $C$, and $d$. Test your algorithm using a box constrained problem 
+(where you can apply the prox-gradient method). 
+
+\bigskip\bigskip\bigskip
+
+
+
+
+
+
+\bigskip\bigskip\bigskip
+
+
+
+\item[(5)] Implement a Chambolle-Pock method to solve  
+\[
+\min_{x} \|Ax-b\|_1 + \|x\|_1. 
+\]
+
+
+
+
+
+\end{enumerate}
+
+
+\end{document}  
