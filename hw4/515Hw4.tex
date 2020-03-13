@@ -185,8 +185,44 @@ $T$ is firmly nonexpansive exactly when $S$ is nonexpansive.
 \begin{proof}
   To prove $\nu = 2\mu$, there's a lot of algebra:
   \begin{align*}
-    \|Sx - Sy\|^2 - \|x-y\|^2
-    &=
+    \nu &=\|Sx - Sy\|^2 - \|x-y\|^2
+    = \|(Tx - Ty) - [(I - T)x - (I - T)y]\|^2  - \|x-y\|^2 \\    
+    &= \|Tx - Ty\|^2 + \|(I - T)x - (I - T)y\|^2
+      - 2\langle Tx - Ty, (I - T)x - (I - T)y\rangle - \|x-y\|^2.
+  \end{align*}
+
+  We focus on the $-2\langle Tx - Ty, (I - T)x - (I - T)y\rangle$ term.
+  \begin{align*}
+    &-2\langle Tx - Ty, (I - T)x - (I - T)y\rangle \\
+    &= \langle Tx - Ty, Tx - Ty \rangle + \langle Tx - Ty, Tx - Ty \rangle
+      - 2\langle Tx - Ty, x - y \rangle \\
+    &= \langle Tx - Ty, Tx - Ty \rangle + \langle Tx - Ty, Tx - Ty \rangle
+      - 2\langle Tx - Ty, x - y \rangle + \langle x - y, x - y \rangle - \langle x - y, x - y \rangle \\
+    &= \| Tx - Ty \|^2 + \langle Tx - Ty, Tx - Ty \rangle
+      - 2\langle Tx - Ty, x - y \rangle + \langle x - y, x - y \rangle - \langle x - y, x - y \rangle \\
+    &= \| Tx - Ty \|^2 + \| (Tx - Ty) - (x-y) \|^2 - \| x - y \|^2 \\
+    &= \| Tx - Ty \|^2 + \| (I - T)x - (I- T)y\|^2 - \| x - y \|^2 \\
+  \end{align*}
+  where we have completed the square to get the $\| (Tx - Ty) - (x-y) \|^2$
+  term.
+
+  Substituting back into the first equation, we have that
+  \begin{align*}
+    \nu
+    &= \|Tx - Ty\|^2 + \|(I - T)x - (I - T)y\|^2 \\
+    &+ \left[\| Tx - Ty \|^2 + \| (I - T)x - (I- T)y\|^2 - \| x - y \|^2\right] - \|x-y\|^2 \\
+    &= 2\|Tx - Ty\|^2 + 2\|(I - T)x - (I - T)y\|^2 - 2\| x - y \|^2 \\
+    &= 2\left[\|Tx - Ty\|^2 + \|(I - T)x - (I - T)y\|^2 - \| x - y \|^2\right] \\
+    &= 2\mu
+  \end{align*}
+  as desired.
+
+  Using the definitions of expansive and firmly nonexpansive,
+  \begin{align*}
+    \text{$S$ is nonexpansive}
+    \Leftrightarrow \nu \leq 0
+    \Leftrightarrow \mu \leq 0
+    \Leftrightarrow \text{$T$ is firmly nonexpansive.}
   \end{align*}
 \end{proof}
 
