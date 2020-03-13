@@ -2,7 +2,7 @@
 from numpy.linalg import norm
 from numpy.linalg import solve
 import numpy as np
-
+from scipy import optimize
 
 
 # =============================================================================
@@ -74,17 +74,11 @@ def optimizeWithIP(x0, A, b, C, d, mu=1.0, rate=0.1, tol=1e-6, max_iter=1000):
     id_v = slice(n, n+k)
     # initialize KKT system and its Jacobian
     F = np.zeros(n+k)
-    # *************************************************************************
-    # TODO: Fill in F
-    # Hint: it is easier to use id_x and id_v to access different components
-    # *************************************************************************
-    #
+    F[id_x] = A.T.dot(A.dot(x) - b) + C.T.dot(v)
+    F[id_v] = v * s - v.dot(s)/(mu * d.size)
     dF = np.zeros((n+k, n+k))
-    # *************************************************************************
-    # TODO: Fill in dF
-    # Hint: it is easier to use id_x and id_v to access different components
-    # *************************************************************************
-    #
+    dF[id_x] = np.concatenate((A.T.dot(A), C.T), axis=1)
+    dF[id_v] = np.concatenate((-np.expand_dims(v, -1) * C, np.diag(s)), axis=1)
     # record the primal objective and error measure
     obj_his = np.zeros(max_iter)
     err_his = np.zeros(max_iter)
@@ -98,16 +92,18 @@ def optimizeWithIP(x0, A, b, C, d, mu=1.0, rate=0.1, tol=1e-6, max_iter=1000):
         dv = dz[id_v]
         # safe guard on step size alpha
         alpha = 1.0
-        # s+ has to be positive
-        # *********************************************************************
-        # TODO: Adjust alpha such that d - C(x + alpha dx) > 0
-        # *********************************************************************
         # v+ has to be positive
-        # *********************************************************************
-        # TODO: Adjust alpha such that v + alpha dv > 0
-        # *********************************************************************
+        # Adjust alpha such that v + alpha dv > 0
         ind = np.where(dv < 0.0)[0]
-        alpha = min(alpha, 0.99*np.min(-v[ind]/dv[ind]))
+        alpha = min(alpha, 0.999 * np.min(-v[ind] / dv[ind]))
+        # s+ has to be positive
+        # Adjust alpha such that d - C(x + alpha dx) > 0
+        if any(C.dot(x + alpha * dx) > d):
+          alpha = 0.999 * optimize.bisect(
+            lambda delta: 2 * np.any(C.dot(x + delta * dx) > d).astype(np.int32) - 1,
+            0, alpha)
+        # TODO: another bisection on norm?
+        
         #
         # update variable
         x += alpha*dx
@@ -121,13 +117,10 @@ def optimizeWithIP(x0, A, b, C, d, mu=1.0, rate=0.1, tol=1e-6, max_iter=1000):
         mu = rate*np.mean(v*s)
         #
         # update F and dF
-        # *********************************************************************
-        # TODO: update F and dF
-        # Hint: Do not need to update all parts of dF
-        # F[id_x] = ?
-        # F[id_v] = ?
-        # *********************************************************************
-        #
+        F[id_x] = A.T.dot(A.dot(x) - b) + C.T.dot(v)
+        F[id_v] = v * s - mu
+        dF[id_v] = np.concatenate((-np.expand_dims(v, -1) * C, np.diag(s)), axis=1)
+
         obj = 0.5*np.sum(r**2)
         err = np.linalg.norm(F)
         obj_his[iter_count] = obj

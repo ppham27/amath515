@@ -20,5 +20,5 @@ source .venv/bin/activate
 Install any dependencies.
 
 ```
-pip install numpy scipy ipython jupyter matplotlib
+pip install numpy scipy ipython jupyter matplotlib cvxopt
 ```
