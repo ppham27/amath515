@@ -57,16 +57,62 @@ For any such nonexpansive operator $T$, define
 T_\lambda = (1-\lambda)I + \lambda T. 
 \]
 \begin{enumerate}
-\item Show that $T_\lambda$ and $T$ have the same fixed points. 
+\item Show that $T_\lambda$ and $T$ have the same fixed points.
+  \begin{proof}
+    Suppose that $Tx = x$. Then, it's easy to see that
+    \begin{align*}
+      T_\lambda x
+      &= \left((1-\lambda)I + \lambda T\right)x \\
+      &= (1-\lambda)Ix + \lambda Tx \\
+      &= (1-\lambda)x + \lambda x = x.
+    \end{align*}
+
+    Similarly, suppose $T_\lambda y = y$. If $\lambda \neq 0$, then
+    $T = \lambda^{-1}\left(T_\lambda - (1-\lambda)I\right)$, and
+    \begin{align*}
+      Ty
+      &= \lambda^{-1}\left(T_\lambda - (1-\lambda)I\right)y \\
+      &=\lambda^{-1}\left(T_\lambda y -  (1-\lambda)Iy\right) \\
+      &=\lambda^{-1}\left(y - \left(1 - \lambda\right)y\right) \\
+      &=\lambda^{-1}\left(\lambda y\right) = y.
+    \end{align*}
+
+    Thus, when $\lambda \neq 0$, the set of fixed points are the same. When
+    $\lambda = 0$, the set of fixed points of $T$ is a subset of the fixed
+    points of $T_\lambda = I$.
+  \end{proof}
 \item Use problem 1 to show 
 \[
 \|T_\lambda z - \overline z\|^2 \leq \|z-\overline z\|^2 - \lambda(1-\lambda) \|z - Tz\|^2.
 \]
 where $\overline z$ is any fixed point of $T$, i.e. $T\overline z = \overline z$.
 
-\end{enumerate}
+\begin{proof}
+  We first apply the definition of $T_\lambda$. Next, we use the identity in
+  problem 1. Then, we use that $\overline z$ is a fixed point of $T$. Finally,
+  we use the nonexpansive property of $T$ for the inequality.
+  \begin{align*}
+    \|T_\lambda z - \overline z\|^2
+    &=
+      \|(1-\lambda)z + \lambda Tz - \lambda\overline z - (1-\lambda)\overline z\|^2 \\
+    &=
+      \|(1-\lambda)(z - \overline z) + \lambda (Tz - \overline z) \|^2 \\
+    &=
+      \|(1-\lambda)(z - \overline z) + \lambda (Tz - \overline z) \|^2
+      + \lambda(1-\lambda)(z - Tz)
+      - \lambda(1-\lambda)(z - Tz) \\
+    &= (1-\lambda)\|z - \overline z\|^2 + \lambda \|Tz - \overline z\|^2
+      - \lambda(1-\lambda)(z - Tz) \\
+    &= (1-\lambda)\|z - \overline z\|^2 + \lambda \|Tz - T\overline z\|^2
+      - \lambda(1-\lambda)(z - Tz) \\
+    &\leq
+      (1-\lambda)\|z - \overline z\|^2 + \lambda \|z - \overline z\|^2
+      - \lambda(1-\lambda)(z - Tz) \\
+    & = \|z - \overline z\|^2 - \lambda(1-\lambda)(z - Tz).
+  \end{align*}
+\end{proof}
 
-\bigskip\bigskip\bigskip
+\end{enumerate}
 
 \item An operator $T$ is {\it firmly nonexpansive} when it satisfies 
 \[
@@ -79,11 +125,51 @@ where $\overline z$ is any fixed point of $T$, i.e. $T\overline z = \overline z$
 \[
 \langle x-y, Tx - Ty \rangle \geq \|Tx - Ty\|^2. 
 \]
+
+\begin{proof}
+  ``$\Rightarrow$'': Suppose $\langle x-y, Tx - Ty \rangle \geq \|Tx - Ty\|^2$.
+
+  ``$\Leftarrow$'': Suppose $T$ is firmly nonexpansive.
+
+
+  Suppose $T$ is firmly nonexpansive.
+  \begin{align*}
+    \|Tx - Ty\|^2
+    &+ \|(I-T) x - (I-T)y\|^2 \leq \|x-y\|^2 \\
+    &\Leftrightarrow \|Tx - Ty\|^2 + \|(x-y)- (T x - T y)\|^2 \leq \|x-y\|^2 \\
+    &\Leftrightarrow
+      \|Tx - Ty\|^2 + \|(x-y)- (T x - T y)\|^2 \leq \|x-y\|^2 \\
+    &\Leftrightarrow
+      \|Tx - Ty\|^2 + \|x-y\|^2 + \|T x - T y)\|^2
+      - 2\langle x - y, T x - T y\rangle \leq \|x-y\|^2 \\
+    &\Leftrightarrow
+      2\|Tx - Ty\|^2 \leq 2\langle x - y, T x - T y\rangle \\
+    &\Leftrightarrow
+      2\|Tx - Ty\|^2 \leq 2\langle x - y, T x - T y\rangle \\
+    &\Leftrightarrow
+      \langle x - y, T x - T y\rangle  \geq \|Tx - Ty\|^2,
+  \end{align*}
+  which is the desired result.
+\end{proof}
 \item Show $T$ is firmly nonexpansive if and only if 
 \[
 \langle Tx - Ty, (I-T)x - (I-T)y \rangle \geq 0. 
 \]
 
+\begin{proof}
+  This follows from the previous result in part (a) and the bilinearity of the
+  inner product:
+  \begin{align*}
+    \text{$T$ is firmly nonexpansive}
+    &\Leftrightarrow \langle x-y, Tx - Ty \rangle \geq \|Tx - Ty\|^2 \\
+    &\Leftrightarrow \langle x-y, Tx - Ty \rangle - \|Tx - Ty\|^2 \geq  0 \\
+    &\Leftrightarrow \langle x-y, Tx - Ty \rangle - \langle Tx - Ty, Tx - Ty \rangle \geq  0 \\
+    &\Leftrightarrow \langle x-y - (Tx - Ty), Tx - Ty \rangle \geq  0 \\
+    &\Leftrightarrow \langle (I - T)x - (I - T)y, Tx - Ty \rangle \geq  0 \\
+    &\Leftrightarrow \langle Tx - Ty, (I - T)x - (I - T)y \rangle \geq  0,
+  \end{align*}
+  which is the desired result.
+\end{proof}
 
 \item Suppose that $S = 2T - I$. Let 
 \[
@@ -94,7 +180,15 @@ and let
 \nu = \|Sx - Sy\|^2 - \|x-y\|^2.
 \]
 Show that $2\mu = \nu$ (you may find it helpful to use problem (1)). Conclude that 
-$T$ is firmly nonexpansive exactly when $S$ is nonexpansive. 
+$T$ is firmly nonexpansive exactly when $S$ is nonexpansive.
+
+\begin{proof}
+  To prove $\nu = 2\mu$, there's a lot of algebra:
+  \begin{align*}
+    \|Sx - Sy\|^2 - \|x-y\|^2
+    &=
+  \end{align*}
+\end{proof}
 
 \end{enumerate}
 
