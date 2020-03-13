@@ -102,8 +102,15 @@ def optimizeWithIP(x0, A, b, C, d, mu=1.0, rate=0.1, tol=1e-6, max_iter=1000):
           alpha = 0.999 * optimize.bisect(
             lambda delta: 2 * np.any(C.dot(x + delta * dx) > d).astype(np.int32) - 1,
             0, alpha)
-        # TODO: another bisection on norm?
-        
+        # Backtracking line search. See 11.7.3 of Boyd's Convex Optimization.
+        while True:
+          x_copy, v_copy = x + alpha * dx, v + alpha * dv
+          F_copy_norm = np.linalg.norm(np.concatenate((
+            A.T.dot(A.dot(x_copy) - b) + C.T.dot(v_copy),
+            v_copy * (d - C.dot(x_copy)) - mu)), 2)
+          if F_copy_norm <= (1. - 0.1 * alpha) * np.linalg.norm(F, 2): break
+          print(alpha, alpha/2)
+          alpha /= 2.
         #
         # update variable
         x += alpha*dx
