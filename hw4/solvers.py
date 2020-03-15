@@ -163,9 +163,9 @@ def optimizeWithCP(x0, A, b, c, h, k, prox_ch, prox_k,
         objective function
     k : function
         objective function (regularizer)
-    func_ch : function
+    prox_ch : function
         Input x and return prox of conjugate of h
-    func_k : function
+    prox_k : function
         Input x and return prox of k
     tol : float, optional
         Optimiality tolerance for terminating the solver.
@@ -210,15 +210,13 @@ def optimizeWithCP(x0, A, b, c, h, k, prox_ch, prox_k,
     while err >= tol:
         # update x
         # *********************************************************************
-        # TODO: update x and rx
-        # x_new = ?
-        # rx_new = ?
+        x_new = prox_k(x - alpha * rv, alpha)
+        rx_new = b - A.dot(x_new)
         # *********************************************************************
         # update v
         # *********************************************************************
-        # TODO: update x and rx
-        # v_new = ?
-        # rv_new = ?
+        v_new = prox_ch(v + alpha * (2 * rx_new - rx), alpha)
+        rv_new = c - A.T.dot(v_new)
         # *********************************************************************
         # update convergence result
         obj = c.dot(x_new) + h(rx_new) + k(x_new)

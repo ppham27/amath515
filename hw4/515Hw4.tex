@@ -1,4 +1,5 @@
 \documentclass[11pt]{amsart}
+\usepackage{hyperref}
 \usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
 \geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
 %\geometry{landscape}                % Activate for for rotated page geometry
@@ -128,11 +129,6 @@ where $\overline z$ is any fixed point of $T$, i.e. $T\overline z = \overline z$
 \]
 
 \begin{proof}
-  ``$\Rightarrow$'': Suppose $\langle x-y, Tx - Ty \rangle \geq \|Tx - Ty\|^2$.
-
-  ``$\Leftarrow$'': Suppose $T$ is firmly nonexpansive.
-
-
   Suppose $T$ is firmly nonexpansive.
   \begin{align*}
     \|Tx - Ty\|^2
@@ -218,7 +214,7 @@ $T$ is firmly nonexpansive exactly when $S$ is nonexpansive.
   \end{align*}
   as desired.
 
-  Using the definitions of expansive and firmly nonexpansive,
+  Using the definitions of nonexpansive and firmly nonexpansive,
   \begin{align*}
     \text{$S$ is nonexpansive}
     \Leftrightarrow \nu \leq 0
@@ -230,7 +226,7 @@ $T$ is firmly nonexpansive exactly when $S$ is nonexpansive.
 \end{enumerate}
 
 \end{enumerate}
-\newpage
+
 \noindent{\bf Coding Assignment}
 \vskip 8pt \noindent
 Please download \texttt{515Hw4\_Coding.ipynb} and \texttt{solvers.py} to complete problem (4) and (5).
@@ -245,14 +241,17 @@ Please download \texttt{515Hw4\_Coding.ipynb} and \texttt{solvers.py} to complet
 Let the user input $A$, $b$, $C$, and $d$. Test your algorithm using a box constrained problem 
 (where you can apply the prox-gradient method). 
 
-\bigskip\bigskip\bigskip
+\begin{proof}
+  See \texttt{solvers.py} for the code and \texttt{515Hw4\_Coding.ipynb} for the
+  demo. See Figure \ref{fig:interior_point} for a plot of covergence over time.
 
-
-
-
-
-
-\bigskip\bigskip\bigskip
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{interior_point.pdf}
+    \caption{Convergence of primal-dual interior point method.}
+    \label{fig:interior_point}
+  \end{figure}
+\end{proof}
 
 
 
@@ -261,7 +260,17 @@ Let the user input $A$, $b$, $C$, and $d$. Test your algorithm using a box const
 \min_{x} \|Ax-b\|_1 + \|x\|_1. 
 \]
 
+\begin{proof}
+  See \texttt{solvers.py} for the code and \texttt{515Hw4\_Coding.ipynb} for the
+  demo. See Figure \ref{fig:signal_recovery} for a plot of the recovered signal.
 
+  \begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{signal_recovery.pdf}
+    \caption{Demonstration of the Chambolle-Pock recovering a signal.}
+    \label{fig:signal_recovery}
+  \end{figure}
+\end{proof}
 
 
 
